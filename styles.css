@@ -88,20 +88,7 @@ body {
   overflow-x: hidden;
 }
 
-/* Background texture */
-body::before {
-  content: '';
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: 
-    radial-gradient(circle at 20% 20%, rgba(56, 189, 248, 0.08), transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(52, 211, 153, 0.06), transparent 50%);
-  pointer-events: none;
-  z-index: -1;
-}
+
 
 /* ------------------------------------------------------------
    ACCESSIBILITY
