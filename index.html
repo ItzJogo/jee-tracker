@@ -4,12 +4,12 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 
-<title>JEE FOCUS TRACKER PRO — Yash v7.1 (Fixed)</title>
+<title>JEE FOCUS TRACKER PRO — v9.0 (Modular)</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link rel="stylesheet" href="style.css?v=1.1">
+<link rel="stylesheet" href="style.css?v=9.0">
 
 
 </head>
@@ -22,15 +22,15 @@
   <div class="brand">
     <div class="avatar" id="avatar">YR</div>
     <div>
-      <div class="title">JEE FOCUS TRACKER — v7.1 PRO</div>
-      <div class="subtitle">Neon Glass Cockpit — Yash Mode</div>
+      <div class="title">JEE FOCUS TRACKER — v9.0 PRO</div>
+      <div class="subtitle">Production-Ready Modular Architecture</div>
     </div>
   </div>
 
   <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn" id="exportBtn">Export</button>
-    <button class="btn" id="importBtn">Import</button>
-    <button class="btn" id="themeToggle">☀ / 🌙</button>
+    <button class="btn" id="exportBtn" aria-label="Export all data">Export</button>
+    <button class="btn" id="importBtn" aria-label="Import data from file">Import</button>
+    <button class="btn" id="themeToggle" aria-label="Toggle light/dark theme">☀ / 🌙</button>
   </div>
 </header>
 
@@ -84,15 +84,15 @@
     <button class="btn primary" id="addBtn">+ Add Task</button>
     <button class="btn edit" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
 
-    <button class="btn" id="voiceBtn" title="Add task via mic">🎤</button>
-    <button class="btn" id="templateBtn" title="Quick templates">📄</button>
+    <button class="btn" id="voiceBtn" title="Add task via mic" aria-label="Add task via voice input">🎤</button>
+    <button class="btn" id="templateBtn" title="Quick templates" aria-label="Open task templates">📄</button>
   </div>
 </div>
 
-<div id="templateModal" class="modal">
+<div id="templateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="template-modal-title">
   <div class="modal-content">
-    <span class="close" id="tempClose">&times;</span>
-    <h3>Task Templates</h3>
+    <span class="close" id="tempClose" aria-label="Close template modal">&times;</span>
+    <h3 id="template-modal-title">Task Templates</h3>
 
     <div style="margin-top:10px;">
       <button class="btn primary" onclick="applyTemplate('Chemistry','GOC Revision','GOC',30,'High')">GOC – 30 min</button>
@@ -194,17 +194,22 @@
   </div>
 
   <div class="row" style="margin-top:10px;">
-    <input id="pomoWorkInput" type="number" class="input" style="max-width:120px" value="25" placeholder="Work (mins)">
-    <input id="pomoBreakInput" type="number" class="input" style="max-width:120px" value="5" placeholder="Break (mins)">
+    <input id="pomoWorkInput" type="number" class="input" style="max-width:120px" value="25" placeholder="Work (mins)" aria-label="Work minutes">
+    <input id="pomoBreakInput" type="number" class="input" style="max-width:120px" value="5" placeholder="Break (mins)" aria-label="Break minutes">
     <button class="btn" id="setTimesBtn">Set</button>
   </div>
 
   <div style="margin-top:12px;text-align:center">
-    <div id="pomoTimer" style="font-weight:800;font-size:22px">25:00</div>
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px; flex-wrap: wrap;"> <button class="btn primary" id="pStart">Start</button>
-      <button class="btn" id="pPause">Pause</button>
-      <button class="btn" id="pReset">Reset</button>
+    <div id="pomoTimer" style="font-weight:800;font-size:22px" aria-live="polite">25:00</div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px; flex-wrap: wrap;"> <button class="btn primary" id="pStart" aria-label="Start Pomodoro">Start</button>
+      <button class="btn" id="pPause" aria-label="Pause Pomodoro">Pause</button>
+      <button class="btn" id="pReset" aria-label="Reset Pomodoro">Reset</button>
     </div>
+  </div>
+  
+  <div style="margin-top:12px;display:flex;align-items:center;gap:8px;">
+    <input type="checkbox" id="autoStartPomo" style="width:auto;">
+    <label for="autoStartPomo" style="margin:0;cursor:pointer;">Auto-start next session</label>
   </div>
 </div>
 
@@ -271,10 +276,10 @@
 </div>
 
 </section>
-<div id="editModal" class="modal">
+<div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
   <div class="modal-content">
-    <span class="close" id="editClose">&times;</span>
-    <h3>Edit Task</h3>
+    <span class="close" id="editClose" aria-label="Close edit modal">&times;</span>
+    <h3 id="edit-modal-title">Edit Task</h3>
 
     <div class="row" style="margin-top:12px;">
       <input id="editTitle" class="input" placeholder="Task Title">
@@ -317,7 +322,8 @@
 </main>
 </div> 
 
-<script src="script.js"></script>
+<!-- Modular JavaScript with ES6 Modules -->
+<script type="module" src="main.js"></script>
 
 </body>
 </html>
