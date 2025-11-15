@@ -100,6 +100,18 @@ jee-tracker/
 
 No build process required - it's pure ES6 modules.
 
+### 📱 Installing as a PWA (Progressive Web App)
+
+This app can be installed on your phone or desktop for a native app experience!
+
+**Installation:**
+- On **Android/Chrome**: Tap the "Install app" button or menu → "Add to Home screen"
+- On **iOS/Safari**: Tap the Share button → "Add to Home Screen"
+- On **Desktop**: Look for the install icon in the address bar
+
+**⚠️ PWA Cache Issue Fix:**
+If your installed PWA still shows the browser URL bar instead of full-screen mode, see **[PWA-CACHE-FIX-INSTRUCTIONS.md](PWA-CACHE-FIX-INSTRUCTIONS.md)** for step-by-step instructions to fix the caching issue.
+
 ## 🔧 Browser Support
 
 - Chrome/Edge (latest)
