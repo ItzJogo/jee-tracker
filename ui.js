@@ -2,7 +2,7 @@
 // UI.JS — All DOM Manipulation & Rendering Logic
 // -------------------------------------------------------------
 
-import { SYLLABUS, getChapterList } from './syllabus.js';
+import { SYLLABUS, getChapterList } from './syllabus.js?v=9.0.1';
 import { 
   getTasks, 
   getTaskById, 
@@ -12,7 +12,7 @@ import {
   calculateStreak,
   getTodayString,
   loadMediaList
-} from './state.js';
+} from './state.js?v=9.0.1';
 
 // DOM element references
 let DOM = {};

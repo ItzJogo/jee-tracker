@@ -9,7 +9,7 @@ import {
   getReflection,
   getDailyGoal,
   getTheme
-} from './state.js';
+} from './state.js?v=9.0.1';
 
 import { 
   initUI, 
@@ -20,16 +20,16 @@ import {
   renderCalendar, 
   renderMediaLists,
   getDOM
-} from './ui.js';
+} from './ui.js?v=9.0.1';
 
 import { 
   initPomodoro,
   makeDraggable
-} from './pomodoro.js';
+} from './pomodoro.js?v=9.0.1';
 
 import { 
   initEvents 
-} from './events.js';
+} from './events.js?v=9.0.1';
 
 // -------------------------------------------------------------
 // APPLICATION BOOTSTRAP
