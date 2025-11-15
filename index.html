@@ -2,328 +2,520 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>JEE FOCUS TRACKER PRO — v9.0 (Modular)</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<link rel="stylesheet" href="style.css?v=9.0.1">
-
-
+<!-- Styles -->
+<link rel="stylesheet" href="styles.css?v=9.1.0">
 </head>
 <body>
 
+<!-- Accessibility Live Region -->
 <div aria-live="polite" id="liveRegion"></div>
 
+<!-- Main App Container -->
 <div class="app">
-<header class="topbar">
-  <div class="brand">
-    <div class="avatar" id="avatar">YR</div>
-    <div>
-      <div class="title">JEE FOCUS TRACKER — v9.0 PRO</div>
-      <div class="subtitle">Production-Ready Modular Architecture</div>
-    </div>
-  </div>
-
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button class="btn" id="exportBtn" aria-label="Export all data">Export</button>
-    <button class="btn" id="importBtn" aria-label="Import data from file">Import</button>
-    <button class="btn" id="themeToggle" aria-label="Toggle light/dark theme">☀ / 🌙</button>
-  </div>
-</header>
-
-<main class="main-grid">
-<section>
-
-<div class="card">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <strong>Add / Edit Task</strong>
-    <div id="todayDate" style="color:var(--muted);font-size:0.9rem"></div>
-  </div>
-
-  <div class="row" style="margin-top:12px;">
-    <input id="title" class="input" placeholder="Study task e.g. GOC + 20Q">
-  </div>
-
-  <div class="form-inputs-grid" style="margin-top:12px;">
-    <select id="subject" class="input">
-      <option value="Chemistry">⚗️ Chemistry</option>
-      <option value="Physics">⚡ Physics</option>
-      <option value="Math">∞ Math</option>
-      <option value="Biology">🧬 Biology</option>
-    </select>
-
-    <select id="chapter" class="input">
-      <option value="">Select Chapter</option>
-    </select>
-
-    <select id="priority" class="input">
-      <option value="High">High</option>
-      <option value="Medium" selected>Medium</option>
-      <option value="Low">Low</option>
-    </select>
-
-    <input id="minutes" type="number" class="input" placeholder="mins">
-
-    <select id="blockSel" class="input">
-      <option value="Block A">Block A (Morning)</option>
-      <option value="Block B">Block B (Late Morning)</option>
-      <option value="Block C">Block C (Afternoon/Evening)</option>
-      <option value="Block D">Block D (Night)</option>
-    </select>
-
-    <input id="backlogTag" class="input" placeholder="Tag (Arjuna 4.0)">
-  </div>
-  <div class="row" style="margin-top:12px;">
-    <input id="searchInput" class="input" style="max-width:240px;" placeholder="Search tasks...">
-  </div>
-
-  <div style="display:flex;gap:10px;margin-top:12px;flex-wrap: wrap;">
-    <button class="btn primary" id="addBtn">+ Add Task</button>
-    <button class="btn edit" id="cancelEditBtn" style="display:none;">Cancel Edit</button>
-
-    <button class="btn" id="voiceBtn" title="Add task via mic" aria-label="Add task via voice input">🎤</button>
-    <button class="btn" id="templateBtn" title="Quick templates" aria-label="Open task templates">📄</button>
-  </div>
-</div>
-
-<div id="templateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="template-modal-title">
-  <div class="modal-content">
-    <span class="close" id="tempClose" aria-label="Close template modal">&times;</span>
-    <h3 id="template-modal-title">Task Templates</h3>
-
-    <div style="margin-top:10px;">
-      <button class="btn primary" onclick="applyTemplate('Chemistry','GOC Revision','GOC',30,'High')">GOC – 30 min</button>
-    </div>
-
-    <div style="margin-top:10px;">
-      <button class="btn primary" onclick="applyTemplate('Physics','Kinematics PYQs','Kinematics',45,'High')">Kinematics PYQ – 45 min</button>
-    </div>
-
-    <div style="margin-top:10px;">
-      <button class="btn primary" onclick="applyTemplate('Math','Trigonometry Crash','Trigonometry',40,'Medium')">Trigonometry – 40 min</button>
-    </div>
-
-    <div style="margin-top:10px;">
-      <button class="btn" onclick="applyTemplate('Chemistry','Nomenclature','Basic Organic',20,'Low')">OC Nomenclature – 20 min</button>
-    </div>
-  </div>
-</div>
-
-
-<div class="card" style="margin-top:12px;">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <strong>Your Tasks (Grouped)</strong>
-    <div id="dateSmall" style="color:var(--muted);font-size:0.85rem;"></div>
-  </div>
-
-  <div class="row" style="margin-top:12px;">
-    <select id="filterSubject" class="input" style="max-width:150px;">
-      <option value="">Filter Subject</option>
-    </select>
-
-    <select id="filterPriority" class="input" style="max-width:150px;">
-      <option value="">Filter Priority</option>
-    </select>
-
-    <button class="btn" id="clearFiltersBtn">Clear</button>
-  </div>
-
-  <div id="taskList" class="task-list"></div>
-
-  <div id="evaAlert" style="margin-top:10px;font-weight:700;color:var(--accent-red);"></div>
-</div>
-
-
-<div class="card" style="margin-top:12px;">
-  <div style="display:flex;justify-content:space-between;align-items:center">
-    <strong>Pilot Log (Daily Reflection)</strong>
-    <div style="color:var(--muted);font-size:0.9rem">Write — Auto-save</div>
-  </div>
-  <textarea id="reflection" class="input" style="width:100%;min-height:90px;margin-top:10px;padding:12px;border-radius:12px;resize:vertical;" placeholder="How was study today?"></textarea>
-  <div style="display:flex;gap:8px;margin-top:10px; flex-wrap: wrap;"> <button class="btn primary" id="saveRef">Save Reflection</button>
-    <button class="btn" id="clearRef">Clear</button>
-    <div id="autoSaveStatus" style="margin-left:auto;color:var(--muted);font-size:0.9rem">Last saved: —</div>
-  </div>
-</div>
-
-<div class="card" style="margin-top:12px;">
-  <div style="display:flex;justify-content:space-between;align-items:center; flex-wrap: wrap; gap: 8px;"> <strong>Daily Goal</strong>
-    <input id="dailyGoalInput" type="number" class="input" style="max-width:100px" value="240" aria-label="Daily goal minutes">
-  </div>
-
-  <div style="margin-top:12px">
-    <div class="progress-bar"><div id="progressFill" class="progress-fill" style="width:0%"></div></div>
-    <div style="margin-top:8px;color:var(--muted)" id="progressText">0 / 240 mins</div>
-  </div>
-
-  <div style="display:flex;gap:8px;margin-top:12px;align-items:center; flex-wrap: wrap;"> <div style="flex:1">
-      <div style="font-size:0.9rem;color:var(--muted)">Streak</div>
-      <div id="streak" style="font-weight:800;font-size:1.1rem;color:var(--accent)">0 days</div>
-    </div>
-    <div style="width:160px">
-      <button class="btn" id="resetStreak">Reset Streak</button>
-    </div>
-  </div>
-</div>
-
-<div class="card syllabus-section" style="margin-top:12px;">
-  <div style="display:flex;justify-content:space-between;align-items:center; flex-wrap: wrap; gap: 8px;"> <strong>Syllabus Progress</strong>
-    <select id="syllabusSubject" class="input" style="max-width:160px;">
-      <option value="Physics">⚡ Physics</option>
-      <option value="Chemistry">⚗️ Chemistry</option>
-      <option value="Math">∞ Math</option>
-      <option value="Biology">🧬 Biology</option>
-    </select>
-  </div>
-
-  <div id="syllabusChapters" style="margin-top:12px;">
-    <div style="text-align:center;color:var(--muted)">No progress yet — add tasks with chapter selected.</div>
-  </div>
-
-  <div style="display:flex;gap:8px;margin-top:12px; flex-wrap: wrap;"> <button class="btn primary" id="updateSyllabusBtn">Update Overall Progress</button>
-    <button class="btn" id="exportSyllabusBtn">Export Syllabus</button>
-  </div>
-</div>
-
-<div class="card" style="margin-top:12px;">
-  <div style="display:flex;justify-content:space-between;align-items:center; flex-wrap: wrap; gap: 8px;"> <strong>Pomodoro Setup</strong>
-    <div style="color:var(--muted);font-size:0.9rem">Custom timers</div>
-  </div>
-
-  <div class="row" style="margin-top:10px;">
-    <input id="pomoWorkInput" type="number" class="input" style="max-width:120px" value="25" placeholder="Work (mins)" aria-label="Work minutes">
-    <input id="pomoBreakInput" type="number" class="input" style="max-width:120px" value="5" placeholder="Break (mins)" aria-label="Break minutes">
-    <button class="btn" id="setTimesBtn">Set</button>
-  </div>
-
-  <div style="margin-top:12px;text-align:center">
-    <div id="pomoTimer" style="font-weight:800;font-size:22px" aria-live="polite">25:00</div>
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:8px; flex-wrap: wrap;"> <button class="btn primary" id="pStart" aria-label="Start Pomodoro">Start</button>
-      <button class="btn" id="pPause" aria-label="Pause Pomodoro">Pause</button>
-      <button class="btn" id="pReset" aria-label="Reset Pomodoro">Reset</button>
-    </div>
-  </div>
   
-  <div style="margin-top:12px;display:flex;align-items:center;gap:8px;">
-    <input type="checkbox" id="autoStartPomo" style="width:auto;">
-    <label for="autoStartPomo" style="margin:0;cursor:pointer;">Auto-start next session</label>
-  </div>
-</div>
-
-</section>
-<section>
-
-<div class="card">
-  <strong>Dashboard</strong>
-
-  <div style="display:flex;gap:12px;margin-top:10px;">
-    <div style="flex:1;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;text-align:center;">
-      <div style="color:var(--muted);font-size:0.9rem;">Total</div>
-      <div id="total" style="font-size:1.3rem;font-weight:700;">0</div>
+  <!-- Header / Top Bar -->
+  <header class="header">
+    <div class="header-brand">
+      <div class="avatar" id="avatar">YR</div>
+      <div class="header-text">
+        <h1 class="header-title">JEE FOCUS TRACKER</h1>
+        <p class="header-subtitle">v9.0 PRO — Production Architecture</p>
+      </div>
     </div>
+    
+    <nav class="header-actions">
+      <button class="btn btn-icon" id="exportBtn" aria-label="Export all data" title="Export Data">
+        <span>💾</span>
+      </button>
+      <button class="btn btn-icon" id="importBtn" aria-label="Import data from file" title="Import Data">
+        <span>📥</span>
+      </button>
+      <button class="btn btn-icon" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle Theme">
+        <span>☀️</span>
+      </button>
+    </nav>
+  </header>
 
-    <div style="flex:1;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;text-align:center;">
-      <div style="color:var(--muted);font-size:0.9rem;">Done</div>
-      <div id="done" style="font-size:1.3rem;font-weight:700;color:var(--accent-green)">0</div>
-    </div>
-
-    <div style="flex:1;padding:12px;background:rgba(255,255,255,0.05);border-radius:10px;text-align:center;">
-      <div style="color:var(--muted);font-size:0.9rem;">Missed</div>
-      <div id="missed" style="font-size:1.3rem;font-weight:700;color:var(--accent-red)">0</div>
-    </div>
-  </div>
-
+  <!-- Main Content Area -->
+  <main class="main-content">
+    
+    <!-- Left Column: Forms & Inputs -->
+    <section class="column column-left">
+      
+      <!-- Task Form Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">Add New Task</h2>
+          <div id="todayDate" class="card-subtitle"></div>
+        </header>
+        
+        <form class="task-form" id="taskForm">
+          <!-- Task Title -->
+          <div class="form-group">
+            <input 
+              type="text" 
+              id="title" 
+              class="input input-full" 
+              placeholder="Study task (e.g., GOC + 20Q)"
+              aria-label="Task title"
+            />
+          </div>
+          
+          <!-- Form Grid: Subject, Chapter, Priority -->
+          <div class="form-grid">
+            <div class="form-group">
+              <select id="subject" class="input" aria-label="Subject">
+                <option value="Chemistry">⚗️ Chemistry</option>
+                <option value="Physics">⚡ Physics</option>
+                <option value="Math">∞ Math</option>
+                <option value="Biology">🧬 Biology</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <select id="chapter" class="input" aria-label="Chapter">
+                <option value="">Select Chapter</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <select id="priority" class="input" aria-label="Priority">
+                <option value="High">🔴 High</option>
+                <option value="Medium" selected>🟡 Medium</option>
+                <option value="Low">🟢 Low</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <input 
+                type="number" 
+                id="minutes" 
+                class="input" 
+                placeholder="Minutes"
+                aria-label="Expected minutes"
+              />
+            </div>
+            
+            <div class="form-group">
+              <select id="blockSel" class="input" aria-label="Time block">
+                <option value="Block A">🌅 Block A (Morning)</option>
+                <option value="Block B">☀️ Block B (Late Morning)</option>
+                <option value="Block C">🌤️ Block C (Afternoon)</option>
+                <option value="Block D">🌙 Block D (Night)</option>
+              </select>
+            </div>
+            
+            <div class="form-group">
+              <input 
+                type="text" 
+                id="backlogTag" 
+                class="input" 
+                placeholder="Tag (Optional)"
+                aria-label="Task tag"
+              />
+            </div>
+          </div>
+          
+          <!-- Search Input -->
+          <div class="form-group">
+            <input 
+              type="text" 
+              id="searchInput" 
+              class="input input-search" 
+              placeholder="🔍 Search tasks..."
+              aria-label="Search tasks"
+            />
+          </div>
+          
+          <!-- Action Buttons -->
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="addBtn">
+              <span>➕</span> Add Task
+            </button>
+            <button type="button" class="btn btn-secondary" id="cancelEditBtn" style="display:none;">
+              Cancel Edit
+            </button>
+            <button type="button" class="btn btn-icon" id="voiceBtn" title="Add task via voice" aria-label="Voice input">
+              <span>🎤</span>
+            </button>
+            <button type="button" class="btn btn-icon" id="templateBtn" title="Quick templates" aria-label="Open templates">
+              <span>📄</span>
+            </button>
+          </div>
+        </form>
+      </article>
+      
+      <!-- Task List Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">Your Tasks</h2>
+          <div id="dateSmall" class="card-subtitle"></div>
+        </header>
+        
+        <!-- Filters -->
+        <div class="filter-group">
+          <select id="filterSubject" class="input input-small" aria-label="Filter by subject">
+            <option value="">All Subjects</option>
+          </select>
+          <select id="filterPriority" class="input input-small" aria-label="Filter by priority">
+            <option value="">All Priorities</option>
+          </select>
+          <button type="button" class="btn btn-small" id="clearFiltersBtn">Clear</button>
+        </div>
+        
+        <!-- Task List Container -->
+        <div id="taskList" class="task-list" role="list"></div>
+        
+        <!-- Eva Alert -->
+        <div id="evaAlert" class="eva-alert"></div>
+      </article>
+      
+      <!-- Reflection Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">Daily Reflection</h2>
+          <div class="card-subtitle">Auto-saves as you type</div>
+        </header>
+        
+        <div class="form-group">
+          <textarea 
+            id="reflection" 
+            class="input textarea" 
+            placeholder="How was your study session today? What did you learn?"
+            rows="4"
+            aria-label="Daily reflection"
+          ></textarea>
+        </div>
+        
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" id="saveRef">💾 Save</button>
+          <button type="button" class="btn btn-secondary" id="clearRef">Clear</button>
+          <div id="autoSaveStatus" class="auto-save-status">Last saved: —</div>
+        </div>
+      </article>
+      
+      <!-- Daily Goal Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">Daily Goal</h2>
+          <div class="form-group-inline">
+            <input 
+              type="number" 
+              id="dailyGoalInput" 
+              class="input input-tiny" 
+              value="240"
+              aria-label="Daily goal in minutes"
+            />
+            <span class="card-subtitle">minutes</span>
+          </div>
+        </header>
+        
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div id="progressFill" class="progress-fill" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+          </div>
+          <div id="progressText" class="progress-text">0 / 240 mins (0%)</div>
+        </div>
+        
+        <div class="streak-container">
+          <div class="streak-info">
+            <div class="streak-label">Current Streak</div>
+            <div id="streak" class="streak-value">0 days 🔥</div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-small" id="resetStreak">Reset</button>
+        </div>
+      </article>
+      
+      <!-- Syllabus Progress Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">Syllabus Progress</h2>
+          <select id="syllabusSubject" class="input input-small" aria-label="Select subject for syllabus">
+            <option value="Physics">⚡ Physics</option>
+            <option value="Chemistry">⚗️ Chemistry</option>
+            <option value="Math">∞ Math</option>
+            <option value="Biology">🧬 Biology</option>
+          </select>
+        </header>
+        
+        <div id="syllabusChapters" class="syllabus-chapters">
+          <div class="empty-message">No progress yet — add tasks with chapters!</div>
+        </div>
+        
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" id="updateSyllabusBtn">Update Progress</button>
+          <button type="button" class="btn btn-secondary" id="exportSyllabusBtn">Export</button>
+        </div>
+      </article>
+      
+      <!-- Pomodoro Setup Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">⏱️ Pomodoro Timer</h2>
+          <div class="card-subtitle">Focus sessions</div>
+        </header>
+        
+        <div class="form-grid-small">
+          <input 
+            type="number" 
+            id="pomoWorkInput" 
+            class="input" 
+            value="25" 
+            placeholder="Work mins"
+            aria-label="Work minutes"
+          />
+          <input 
+            type="number" 
+            id="pomoBreakInput" 
+            class="input" 
+            value="5" 
+            placeholder="Break mins"
+            aria-label="Break minutes"
+          />
+          <button type="button" class="btn btn-secondary" id="setTimesBtn">Set</button>
+        </div>
+        
+        <div class="pomo-display">
+          <div id="pomoTimer" class="pomo-timer" aria-live="polite">25:00</div>
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="pStart" aria-label="Start timer">▶️ Start</button>
+            <button type="button" class="btn btn-secondary" id="pPause" aria-label="Pause timer">⏸️ Pause</button>
+            <button type="button" class="btn btn-secondary" id="pReset" aria-label="Reset timer">🔄 Reset</button>
+          </div>
+        </div>
+        
+        <div class="checkbox-group">
+          <input type="checkbox" id="autoStartPomo" />
+          <label for="autoStartPomo">Auto-start next session</label>
+        </div>
+      </article>
+      
+    </section>
+    
+    <!-- Right Column: Dashboard & Stats -->
+    <section class="column column-right">
+      
+      <!-- Dashboard Stats Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">📊 Dashboard</h2>
+        </header>
+        
+        <div class="stats-grid">
+          <div class="stat-card stat-total">
+            <div class="stat-label">Total</div>
+            <div id="total" class="stat-value">0</div>
+          </div>
+          <div class="stat-card stat-done">
+            <div class="stat-label">Done</div>
+            <div id="done" class="stat-value">0</div>
+          </div>
+          <div class="stat-card stat-missed">
+            <div class="stat-label">Missed</div>
+            <div id="missed" class="stat-value">0</div>
+          </div>
+        </div>
+      </article>
+      
+      <!-- Subject Progress Chart Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">Subject Progress (Today)</h2>
+        </header>
+        <div class="chart-container">
+          <canvas id="progressChart"></canvas>
+        </div>
+      </article>
+      
+      <!-- Syllabus Overall Chart Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">Overall Syllabus</h2>
+        </header>
+        <div class="chart-container">
+          <canvas id="syllabusChart"></canvas>
+        </div>
+      </article>
+      
+      <!-- Calendar Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">📅 Last 7 Days</h2>
+        </header>
+        <div id="calendar" class="calendar-grid"></div>
+      </article>
+      
+      <!-- Media Log Card -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">🎬 Anime / Manga Log</h2>
+        </header>
+        
+        <div class="form-group">
+          <input 
+            type="text" 
+            id="mediaTitleInput" 
+            class="input" 
+            placeholder="Add title"
+            aria-label="Media title"
+          />
+        </div>
+        
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary" id="addAnimeBtn">📺 Anime</button>
+          <button type="button" class="btn btn-primary" id="addMangaBtn">📖 Manga</button>
+        </div>
+        
+        <div class="media-lists">
+          <div class="media-section">
+            <div class="media-label">📺 Anime</div>
+            <div id="animeListContainer" class="media-list"></div>
+          </div>
+          
+          <div class="media-section">
+            <div class="media-label">📖 Manga</div>
+            <div id="mangaListContainer" class="media-list"></div>
+          </div>
+        </div>
+      </article>
+      
+    </section>
+    
+  </main>
+  
 </div>
 
-<div class="card" style="margin-top:12px;">
-  <strong>Subject Progress (Today)</strong>
-  <canvas id="progressChart" style="margin-top:10px;max-height:240px;"></canvas>
-</div>
-
-<div class="card" style="margin-top:12px;">
-  <strong>Syllabus Overall Progress</strong>
-  <canvas id="syllabusChart" style="margin-top:10px;max-height:240px;"></canvas>
-</div>
-
-<div class="card" style="margin-top:12px;">
-  <strong>Calendar (Last 7 Days)</strong>
-  <div id="calendar" class="calendar-grid" style="margin-top:12px;display:grid;grid-template-columns:repeat(7,1fr);gap:8px;"></div>
-</div>
-
-<div class="card" style="margin-top:12px;">
-  <strong>Anime / Manga Log</strong>
-
-  <div class="row" style="margin-top:10px;margin-bottom:8px;">
-    <input id="mediaTitleInput" class="input" placeholder="Add title">
-  </div>
-
-  <div style="display:flex;gap:8px; flex-wrap: wrap;"> <button class="btn primary" id="addAnimeBtn" style="flex:1;">+ Anime</button>
-    <button class="btn primary" id="addMangaBtn" style="flex:1;">+ Manga</button>
-  </div>
-
-  <div style="margin-top:16px;border:1px solid rgba(255,255,255,0.05);padding:10px;border-radius:10px;">
-
-    <div style="font-size:0.9rem;color:var(--accent);">📺 Anime List:</div>
-    <div id="animeListContainer" style="max-height:160px;overflow-y:auto;margin-top:6px;"></div>
-
-    <div style="font-size:0.9rem;color:var(--accent-red);margin-top:14px;">📖 Manga List:</div>
-    <div id="mangaListContainer" style="max-height:160px;overflow-y:auto;margin-top:6px;"></div>
-
-  </div>
-</div>
-
-</section>
+<!-- Edit Modal -->
 <div id="editModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="edit-modal-title">
+  <div class="modal-overlay"></div>
   <div class="modal-content">
-    <span class="close" id="editClose" aria-label="Close edit modal">&times;</span>
-    <h3 id="edit-modal-title">Edit Task</h3>
+    <header class="modal-header">
+      <h3 id="edit-modal-title" class="modal-title">Edit Task</h3>
+      <button class="modal-close" id="editClose" aria-label="Close modal">&times;</button>
+    </header>
+    
+    <form class="modal-body">
+      <div class="form-group">
+        <input 
+          type="text" 
+          id="editTitle" 
+          class="input input-full" 
+          placeholder="Task Title"
+          aria-label="Edit task title"
+        />
+      </div>
+      
+      <div class="form-grid">
+        <div class="form-group">
+          <select id="editSubject" class="input" aria-label="Edit subject">
+            <option value="Chemistry">⚗️ Chemistry</option>
+            <option value="Physics">⚡ Physics</option>
+            <option value="Math">∞ Math</option>
+            <option value="Biology">🧬 Biology</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <select id="editChapter" class="input" aria-label="Edit chapter">
+            <option value="">Select Chapter</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <select id="editPriority" class="input" aria-label="Edit priority">
+            <option value="High">🔴 High</option>
+            <option value="Medium">🟡 Medium</option>
+            <option value="Low">🟢 Low</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <input 
+            type="number" 
+            id="editMinutes" 
+            class="input" 
+            placeholder="Minutes"
+            aria-label="Edit minutes"
+          />
+        </div>
+        
+        <div class="form-group">
+          <select id="editBlock" class="input" aria-label="Edit time block">
+            <option value="Block A">🌅 Block A (Morning)</option>
+            <option value="Block B">☀️ Block B (Late Morning)</option>
+            <option value="Block C">🌤️ Block C (Afternoon)</option>
+            <option value="Block D">🌙 Block D (Night)</option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <input 
+            type="text" 
+            id="editBacklog" 
+            class="input" 
+            placeholder="Tag"
+            aria-label="Edit tag"
+          />
+        </div>
+      </div>
+    </form>
+    
+    <footer class="modal-footer">
+      <button type="button" class="btn btn-primary" id="saveEditBtn">💾 Save Changes</button>
+      <button type="button" class="btn btn-danger" id="deleteEditBtn">🗑️ Delete Task</button>
+    </footer>
+  </div>
+</div>
 
-    <div class="row" style="margin-top:12px;">
-      <input id="editTitle" class="input" placeholder="Task Title">
-    </div>
-
-    <div class="row" style="margin-top:12px;">
-      <select id="editSubject" class="input" style="max-width:170px;"></select>
-      <select id="editChapter" class="input" style="max-width:240px;"><option value="">Select Chapter</option></select>
-      <select id="editPriority" class="input" style="max-width:140px;"></select>
-      <input id="editMinutes" type="number" class="input" style="max-width:90px;" placeholder="mins">
-    </div>
-
-    <div class="row" style="margin-top:12px;">
-      <select id="editBlock" class="input" style="max-width:200px;">
-        <option value="Block A">Block A (Morning)</option>
-        <option value="Block B">Block B (Late Morning)</option>
-        <option value="Block C">Block C (Afternoon/Evening)</option>
-        <option value="Block D">Block D (Night)</option>
-      </select>
-
-      <input id="editBacklog" class="input" style="max-width:170px;" placeholder="Tag">
-    </div>
-
-    <div style="display:flex;gap:10px;margin-top:14px; flex-wrap: wrap;"> <button class="btn primary" id="saveEditBtn">Save Changes</button>
-      <button class="btn danger" id="deleteEditBtn">Delete Task</button>
+<!-- Template Modal -->
+<div id="templateModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="template-modal-title">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <header class="modal-header">
+      <h3 id="template-modal-title" class="modal-title">Quick Templates</h3>
+      <button class="modal-close" id="tempClose" aria-label="Close modal">&times;</button>
+    </header>
+    
+    <div class="modal-body">
+      <div class="template-grid">
+        <button type="button" class="btn btn-template" onclick="applyTemplate('Chemistry','GOC Revision','GOC',30,'High')">
+          ⚗️ GOC – 30 min
+        </button>
+        <button type="button" class="btn btn-template" onclick="applyTemplate('Physics','Kinematics PYQs','Kinematics',45,'High')">
+          ⚡ Kinematics PYQ – 45 min
+        </button>
+        <button type="button" class="btn btn-template" onclick="applyTemplate('Math','Trigonometry Crash','Trigonometry',40,'Medium')">
+          ∞ Trigonometry – 40 min
+        </button>
+        <button type="button" class="btn btn-template" onclick="applyTemplate('Chemistry','Nomenclature','Basic Organic',20,'Low')">
+          ⚗️ OC Nomenclature – 20 min
+        </button>
+      </div>
     </div>
   </div>
 </div>
 
-
-<div class="pomo-fixed" id="miniPomo">
-  <div style="font-size:12px;color:var(--muted);">⏱️ Pomodoro</div>
-  <div id="miniTimer" style="font-weight:800;font-size:18px;">25:00</div>
-  <div style="display:flex;gap:6px;margin-top:8px;">
-    <button class="btn primary" id="miniStart">▶</button>
-    <button class="btn" id="miniPause">II</button>
+<!-- Floating Pomodoro Widget -->
+<aside class="pomo-fab" id="miniPomo">
+  <div class="pomo-fab-label">⏱️ Pomodoro</div>
+  <div id="miniTimer" class="pomo-fab-timer">25:00</div>
+  <div class="pomo-fab-controls">
+    <button class="btn-fab" id="miniStart" aria-label="Start timer">▶️</button>
+    <button class="btn-fab" id="miniPause" aria-label="Pause timer">⏸️</button>
   </div>
-</div>
+</aside>
 
-</main>
-</div> 
-
-<!-- Modular JavaScript with ES6 Modules -->
-<script type="module" src="main.js?v=9.0.1"></script>
+<!-- Modular JavaScript -->
+<script type="module" src="main.js?v=9.1.0"></script>
 
 </body>
 </html>
