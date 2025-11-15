@@ -396,3 +396,148 @@ html,body{
   100% { transform: scale(1) rotate(15deg); opacity: 0.3; }
 }
 /* === END v7.1 FIX === */
+
+/* ------------------------------------------------------------
+   v9.0 — TOAST NOTIFICATIONS & IMPROVEMENTS
+------------------------------------------------------------- */
+
+.toast {
+  position: fixed;
+  bottom: 100px;
+  right: 20px;
+  padding: 16px 24px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  font-weight: 600;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+  z-index: 10000;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.3s ease;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.toast-success {
+  background: linear-gradient(135deg, rgba(52, 211, 153, 0.9), rgba(34, 197, 94, 0.9));
+}
+
+.toast-error {
+  background: linear-gradient(135deg, rgba(248, 113, 113, 0.9), rgba(239, 68, 68, 0.9));
+}
+
+.toast-info {
+  background: linear-gradient(135deg, rgba(56, 189, 248, 0.9), rgba(14, 165, 233, 0.9));
+}
+
+/* Empty State */
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--muted);
+}
+
+.empty-icon {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.5;
+}
+
+.empty-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.empty-text {
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+/* Improved Focus States (Accessibility) */
+.btn:focus,
+.input:focus,
+select:focus,
+textarea:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.btn:focus-visible,
+.input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* Improved Hover States */
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Better mobile responsiveness for buttons */
+@media (max-width: 600px) {
+  .toast {
+    right: 10px;
+    left: 10px;
+    bottom: 80px;
+  }
+  
+  .empty-icon {
+    font-size: 48px;
+  }
+  
+  .empty-title {
+    font-size: 1.2rem;
+  }
+}
+
+/* Draggable Pomodoro Enhancements */
+.pomo-fixed {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+}
+
+.pomo-fixed:active {
+  cursor: grabbing;
+}
+
+/* Title and meta text styles */
+.title-small {
+  font-weight: 600;
+  font-size: 1rem;
+  margin-bottom: 6px;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+/* Edit button styling */
+.btn.edit {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: var(--accent);
+}
+
+.btn.edit:hover {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: var(--accent);
+}

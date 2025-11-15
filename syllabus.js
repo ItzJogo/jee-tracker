@@ -1,0 +1,115 @@
+// -------------------------------------------------------------
+// SYLLABUS.JS — Enhanced Syllabus Data Structure
+// -------------------------------------------------------------
+// Changed from simple array to object-of-objects for progress tracking
+
+export const SYLLABUS = {
+  "Physics": {
+    "Units & Dimensions": { id: 'phy-01', status: 'pending' },
+    "Kinematics 1D": { id: 'phy-02', status: 'pending' },
+    "Kinematics 2D": { id: 'phy-03', status: 'pending' },
+    "NLM": { id: 'phy-04', status: 'pending' },
+    "Friction": { id: 'phy-05', status: 'pending' },
+    "WPE": { id: 'phy-06', status: 'pending' },
+    "Circular Motion": { id: 'phy-07', status: 'pending' },
+    "COM": { id: 'phy-08', status: 'pending' },
+    "Rotation": { id: 'phy-09', status: 'pending' },
+    "SHM": { id: 'phy-10', status: 'pending' },
+    "Waves": { id: 'phy-11', status: 'pending' },
+    "Heat & Thermo": { id: 'phy-12', status: 'pending' },
+    "Electrostatics": { id: 'phy-13', status: 'pending' },
+    "Current": { id: 'phy-14', status: 'pending' },
+    "Capacitors": { id: 'phy-15', status: 'pending' },
+    "Magnetics": { id: 'phy-16', status: 'pending' },
+    "EMI": { id: 'phy-17', status: 'pending' },
+    "AC": { id: 'phy-18', status: 'pending' },
+    "Optics": { id: 'phy-19', status: 'pending' },
+    "Modern Physics": { id: 'phy-20', status: 'pending' }
+  },
+  "Chemistry": {
+    "Mole Concept": { id: 'chem-01', status: 'pending' },
+    "Atomic Structure": { id: 'chem-02', status: 'pending' },
+    "Periodic Table": { id: 'chem-03', status: 'pending' },
+    "Chemical Bonding": { id: 'chem-04', status: 'pending' },
+    "States of Matter": { id: 'chem-05', status: 'pending' },
+    "Thermodynamics": { id: 'chem-06', status: 'pending' },
+    "Equilibrium (Chemical)": { id: 'chem-07', status: 'pending' },
+    "Equilibrium (Ionic)": { id: 'chem-08', status: 'pending' },
+    "Redox": { id: 'chem-09', status: 'pending' },
+    "GOC": { id: 'chem-10', status: 'pending' },
+    "Isomerism": { id: 'chem-11', status: 'pending' },
+    "Hydrocarbons": { id: 'chem-12', status: 'pending' },
+    "Haloalkanes": { id: 'chem-13', status: 'pending' },
+    "Alcohols/Ethers": { id: 'chem-14', status: 'pending' },
+    "Carbonyls": { id: 'chem-15', status: 'pending' },
+    "Acids": { id: 'chem-16', status: 'pending' },
+    "Amines": { id: 'chem-17', status: 'pending' },
+    "Biomolecules": { id: 'chem-18', status: 'pending' },
+    "Solid State": { id: 'chem-19', status: 'pending' },
+    "Solutions": { id: 'chem-20', status: 'pending' },
+    "Electrochem": { id: 'chem-21', status: 'pending' },
+    "Kinetics": { id: 'chem-22', status: 'pending' },
+    "Metallurgy": { id: 'chem-23', status: 'pending' },
+    "p-Block": { id: 'chem-24', status: 'pending' },
+    "d/f-Block": { id: 'chem-25', status: 'pending' },
+    "Coordination": { id: 'chem-26', status: 'pending' }
+  },
+  "Math": {
+    "Basic Maths": { id: 'math-01', status: 'pending' },
+    "Logarithms": { id: 'math-02', status: 'pending' },
+    "Trigonometry": { id: 'math-03', status: 'pending' },
+    "Quadratic": { id: 'math-04', status: 'pending' },
+    "Sequence & Series": { id: 'math-05', status: 'pending' },
+    "Straight Lines": { id: 'math-06', status: 'pending' },
+    "Circles": { id: 'math-07', status: 'pending' },
+    "Conic Sections": { id: 'math-08', status: 'pending' },
+    "Binomial": { id: 'math-09', status: 'pending' },
+    "P&C": { id: 'math-10', status: 'pending' },
+    "Probability": { id: 'math-11', status: 'pending' },
+    "Matrices": { id: 'math-12', status: 'pending' },
+    "Determinants": { id: 'math-13', status: 'pending' },
+    "Functions": { id: 'math-14', status: 'pending' },
+    "ITF": { id: 'math-15', status: 'pending' },
+    "Limits (LCD)": { id: 'math-16', status: 'pending' },
+    "MOD": { id: 'math-17', status: 'pending' },
+    "AOD": { id: 'math-18', status: 'pending' },
+    "Indefinite Int.": { id: 'math-19', status: 'pending' },
+    "Definite Int.": { id: 'math-20', status: 'pending' },
+    "Area": { id: 'math-21', status: 'pending' },
+    "Diff. Eqns": { id: 'math-22', status: 'pending' },
+    "Vector": { id: 'math-23', status: 'pending' },
+    "3D Geometry": { id: 'math-24', status: 'pending' }
+  },
+  "Biology": {
+    "Cell": { id: 'bio-01', status: 'pending' },
+    "Biomolecules": { id: 'bio-02', status: 'pending' },
+    "Cell Cycle": { id: 'bio-03', status: 'pending' },
+    "Transport in Plants": { id: 'bio-04', status: 'pending' },
+    "Photosynthesis": { id: 'bio-05', status: 'pending' },
+    "Respiration": { id: 'bio-06', status: 'pending' },
+    "Plant Growth": { id: 'bio-07', status: 'pending' },
+    "Digestion": { id: 'bio-08', status: 'pending' },
+    "Breathing": { id: 'bio-09', status: 'pending' },
+    "Body Fluids": { id: 'bio-10', status: 'pending' },
+    "Excretion": { id: 'bio-11', status: 'pending' },
+    "Locomotion": { id: 'bio-12', status: 'pending' },
+    "Neural Control": { id: 'bio-13', status: 'pending' },
+    "Endocrine": { id: 'bio-14', status: 'pending' },
+    "Repro. in Org.": { id: 'bio-15', status: 'pending' },
+    "Sexual Repro. Plants": { id: 'bio-16', status: 'pending' },
+    "Human Repro.": { id: 'bio-17', status: 'pending' },
+    "Repro. Health": { id: 'bio-18', status: 'pending' },
+    "Genetics (Inheritance)": { id: 'bio-19', status: 'pending' },
+    "Genetics (Molecular)": { id: 'bio-20', status: 'pending' },
+    "Evolution": { id: 'bio-21', status: 'pending' },
+    "Human Health": { id: 'bio-22', status: 'pending' },
+    "Biotech": { id: 'bio-23', status: 'pending' },
+    "Ecology": { id: 'bio-24', status: 'pending' }
+  }
+};
+
+// Helper function to get chapter list for a subject (for backwards compatibility)
+export function getChapterList(subject) {
+  if (!SYLLABUS[subject]) return [];
+  return Object.keys(SYLLABUS[subject]);
+}
