@@ -1,6 +1,7 @@
 /* ============================================================
-   JEE FOCUS TRACKER — STYLES.CSS v9.1
-   Mobile-First Responsive Design
+   JEE FOCUS TRACKER — STYLES.CSS v9.2
+   Mobile-First Responsive Design - REDESIGNED
+   Bug Fix: Removed any white overlay gradients
    ============================================================ */
 
 /* ------------------------------------------------------------
@@ -72,28 +73,31 @@ html {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* CRITICAL BUG FIX: Simple solid background only - NO white overlays */
 body {
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   font-size: 1rem;
   line-height: 1.6;
   color: var(--color-text-primary);
-  background: linear-gradient(
-    180deg,
-    var(--color-bg-primary) 0%,
-    var(--color-bg-secondary) 50%,
-    var(--color-bg-primary) 100%
-  );
-  background-attachment: fixed;
+  background: var(--color-bg-primary);
+  /* Simple solid background - no gradients that could create white overlays */
   min-height: 100vh;
   overflow-x: hidden;
 }
 
-
+/* BUG FIX: Ensure no pseudo-elements create overlays */
+html::before,
+html::after,
+body::before,
+body::after {
+  display: none !important;
+}
 
 /* ------------------------------------------------------------
    ACCESSIBILITY
    ------------------------------------------------------------ */
-[aria-live="polite"] {
+[aria-live="polite"],
+#liveRegion {
   position: absolute;
   left: -9999px;
   width: 1px;
@@ -108,7 +112,7 @@ body {
 }
 
 /* ------------------------------------------------------------
-   LAYOUT - MOBILE FIRST
+   LAYOUT - MOBILE FIRST (Single Column)
    ------------------------------------------------------------ */
 .app {
   width: 100%;
@@ -117,6 +121,7 @@ body {
   padding: var(--space-md);
 }
 
+/* Header */
 .header {
   display: flex;
   flex-direction: column;
@@ -172,15 +177,39 @@ body {
   flex-wrap: wrap;
 }
 
-/* Main Content Layout - Single Column on Mobile */
-.main-content {
-  display: grid;
-  grid-template-columns: 1fr;
+/* Main Content Container - Mobile: Single Column Stack */
+.container {
+  display: flex;
+  flex-direction: column;
   gap: var(--space-lg);
   padding-bottom: 120px; /* Space for floating Pomodoro */
 }
 
+/* Form & Tasks Columns - Mobile: Full Width Stack */
+#form-column,
+#tasks-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  width: 100%;
+}
+
+/* Maintain old class names for backward compatibility */
 .column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+  padding-bottom: 120px;
+}
+
+.column-left,
+.column-right {
   display: flex;
   flex-direction: column;
   gap: var(--space-lg);
@@ -226,7 +255,7 @@ body {
 }
 
 /* ------------------------------------------------------------
-   FORM ELEMENTS
+   FORM ELEMENTS - MOBILE FIRST
    ------------------------------------------------------------ */
 .form-group {
   margin-bottom: var(--space-md);
@@ -242,8 +271,10 @@ body {
   gap: var(--space-sm);
 }
 
-/* Input Base Styles */
-.input {
+/* Input Base Styles - MOBILE: Full Width */
+.input,
+.select,
+.textarea {
   width: 100%;
   padding: 0.75rem 1rem;
   font-size: 0.9375rem;
@@ -256,7 +287,9 @@ body {
   outline: none;
 }
 
-.input:focus {
+.input:focus,
+.select:focus,
+.textarea:focus {
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
 }
@@ -265,12 +298,33 @@ body {
   color: var(--color-text-muted);
 }
 
+/* MOBILE FIX: All inputs in task form are full width and stacked */
+.task-form .input,
+.task-form .select {
+  width: 100%;
+  margin-top: var(--space-sm);
+}
+
+.task-form .input:first-child,
+.task-form .select:first-child {
+  margin-top: 0;
+}
+
+/* MOBILE FIX: Force rows to stack vertically */
+.task-form .row {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0;
+}
+
 /* Input Variants */
 .input-full {
   width: 100%;
 }
 
-.input-small {
+.input-small,
+.input.input-small {
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
 }
@@ -295,7 +349,8 @@ body {
   line-height: 1.5;
 }
 
-select.input {
+select.input,
+.select {
   cursor: pointer;
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
@@ -304,7 +359,7 @@ select.input {
   padding-right: 2.5rem;
 }
 
-/* Form Grid Layout */
+/* Form Grid Layout - MOBILE: Single column */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr;
@@ -359,6 +414,8 @@ select.input {
   transition: all var(--transition-fast);
   outline: none;
   white-space: nowrap;
+  /* Mobile: Easier tap targets */
+  min-height: 44px;
 }
 
 .btn:hover {
@@ -402,12 +459,14 @@ select.input {
 .btn-small {
   padding: 0.5rem 0.875rem;
   font-size: 0.875rem;
+  min-height: 36px;
 }
 
 .btn-icon {
   padding: 0.625rem;
   aspect-ratio: 1;
   font-size: 1.25rem;
+  min-height: 44px;
 }
 
 .btn-icon span {
@@ -439,9 +498,10 @@ select.input {
 }
 
 /* ------------------------------------------------------------
-   TASK LIST
+   TASK LIST - REDESIGNED FOR CLARITY
    ------------------------------------------------------------ */
-.task-list {
+.task-list,
+#taskList {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
@@ -468,11 +528,13 @@ select.input {
   color: var(--color-text-secondary);
 }
 
-/* Task Item */
-.task {
+/* Task Item - REDESIGNED */
+.task,
+.task-item {
   position: relative;
   display: flex;
-  gap: var(--space-md);
+  flex-direction: column;
+  gap: var(--space-sm);
   padding: var(--space-md);
   background: var(--color-bg-tertiary);
   border: 1px solid var(--color-border-light);
@@ -482,47 +544,66 @@ select.input {
   overflow: hidden;
 }
 
-.task:hover {
+.task:hover,
+.task-item:hover {
   transform: translateX(2px);
   border-color: var(--color-primary);
   box-shadow: var(--shadow-sm);
 }
 
-.task > div:first-child {
-  flex: 1;
-  min-width: 0;
-}
-
+/* Task Title - BOLD */
+.task-title,
 .title-small {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1rem;
   color: var(--color-text-primary);
   margin-bottom: var(--space-xs);
+  line-height: 1.4;
 }
 
+/* Task Meta - Smaller and Muted */
+.task-meta,
 .meta {
-  font-size: 0.875rem;
-  color: var(--color-text-secondary);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
   margin-bottom: var(--space-xs);
+  line-height: 1.5;
+}
+
+/* Task Actions - Well-spaced, easy to tap */
+.task-actions {
+  display: flex;
+  gap: var(--space-sm);
+  margin-top: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.task-actions .btn {
+  flex: 1;
+  min-width: 80px;
 }
 
 /* Task Status Styles */
-.task.task-done {
+.task.task-done,
+.task-item.task-done {
   opacity: 0.6;
   border-left-color: var(--color-success);
 }
 
+.task.task-done .task-title,
 .task.task-done .title-small {
   text-decoration: line-through;
   color: var(--color-text-muted);
 }
 
-.task.task-missed {
+.task.task-missed,
+.task-item.task-missed {
   opacity: 0.5;
   border-left-color: var(--color-danger);
   background: rgba(248, 113, 113, 0.05);
 }
 
+.task.task-missed .task-title,
 .task.task-missed .title-small {
   text-decoration: line-through;
 }
@@ -547,14 +628,6 @@ select.input {
     transform: scale(1) rotate(15deg);
     opacity: 0.2;
   }
-}
-
-/* Task Buttons Container */
-.task > div:last-child {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: var(--space-sm);
 }
 
 /* Badge */
@@ -646,6 +719,10 @@ select.input {
   font-size: 2rem;
   font-weight: 700;
   color: var(--color-text-primary);
+}
+
+.stat-total .stat-value {
+  color: var(--color-primary);
 }
 
 .stat-done .stat-value {
@@ -833,7 +910,7 @@ select.input {
 }
 
 /* ------------------------------------------------------------
-   POMODORO
+   POMODORO - Clean Widget
    ------------------------------------------------------------ */
 .pomo-display {
   text-align: center;
@@ -856,9 +933,10 @@ select.input {
 }
 
 /* ------------------------------------------------------------
-   FLOATING POMODORO FAB
+   FLOATING POMODORO FAB - High z-index, Draggable
    ------------------------------------------------------------ */
-.pomo-fab {
+.pomo-fab,
+#miniPomo {
   position: fixed;
   right: var(--space-md);
   bottom: var(--space-md);
@@ -868,13 +946,14 @@ select.input {
   border-radius: var(--radius-lg);
   backdrop-filter: blur(var(--blur-glass));
   box-shadow: var(--shadow-lg);
-  z-index: 1000;
+  z-index: 1200; /* Higher than modals (2000) but visible */
   cursor: grab;
   user-select: none;
   min-width: 140px;
 }
 
-.pomo-fab:active {
+.pomo-fab:active,
+#miniPomo:active {
   cursor: grabbing;
 }
 
@@ -908,6 +987,7 @@ select.input {
   cursor: pointer;
   transition: all var(--transition-fast);
   font-size: 1rem;
+  min-height: 32px;
 }
 
 .btn-fab:hover {
@@ -916,7 +996,7 @@ select.input {
 }
 
 /* ------------------------------------------------------------
-   MODALS
+   MODALS - z-index: 2000
    ------------------------------------------------------------ */
 .modal {
   display: none;
@@ -925,7 +1005,7 @@ select.input {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 2000;
+  z-index: 2000; /* Highest z-index for modals */
   align-items: center;
   justify-content: center;
   padding: var(--space-md);
@@ -1092,6 +1172,7 @@ select.input {
     align-items: center;
   }
   
+  /* Form grid can be 2 columns on tablet */
   .form-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1112,30 +1193,76 @@ select.input {
 }
 
 /* ------------------------------------------------------------
-   RESPONSIVE - DESKTOP (min-width: 900px)
+   RESPONSIVE - DESKTOP (min-width: 950px)
+   CRUCIAL: 2-Column Layout with Sticky Form Column
    ------------------------------------------------------------ */
-@media (min-width: 900px) {
+@media (min-width: 950px) {
   .app {
     max-width: 1400px;
     padding: var(--space-xl);
   }
   
-  /* 2-Column Layout */
-  .main-content {
-    grid-template-columns: 1.5fr 1fr;
+  /* CRUCIAL: Desktop 2-Column Layout */
+  .container {
+    display: flex;
+    flex-direction: row; /* Side by side */
     gap: var(--space-xl);
+    align-items: flex-start;
   }
   
-  /* Sticky Left Column */
-  .column-left {
+  /* Form Column - Left side, Sticky */
+  #form-column {
+    flex: 1;
+    max-width: 450px;
     position: sticky;
-    top: var(--space-lg);
-    align-self: start;
-    max-height: calc(100vh - 2 * var(--space-lg));
+    top: 20px; /* Sticky positioning */
+    align-self: flex-start;
+    max-height: calc(100vh - 40px);
     overflow-y: auto;
   }
   
-  /* Better form grid on desktop */
+  /* Tasks Column - Right side, Flexible */
+  #tasks-column {
+    flex: 2;
+  }
+  
+  /* Support old class names */
+  .main-content {
+    display: flex;
+    flex-direction: row;
+    gap: var(--space-xl);
+    align-items: flex-start;
+  }
+  
+  .column-left {
+    flex: 1;
+    max-width: 450px;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+    max-height: calc(100vh - 40px);
+    overflow-y: auto;
+  }
+  
+  .column-right {
+    flex: 2;
+  }
+  
+  /* DESKTOP: Re-apply row styles for form */
+  .task-form .row {
+    flex-direction: row;
+    gap: var(--space-sm);
+    margin-top: var(--space-sm);
+  }
+  
+  .task-form .select.small,
+  .task-form .input.small {
+    flex: 1 1 120px;
+    min-width: 110px;
+    margin-top: 0; /* Remove stacking margin */
+  }
+  
+  /* Desktop form grid: 3 columns */
   .form-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1145,8 +1272,28 @@ select.input {
     height: 280px;
   }
   
+  /* Task items can be in a better layout */
+  .task,
+  .task-item {
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-between;
+  }
+  
+  .task-actions {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-top: 0;
+  }
+  
+  .task-actions .btn {
+    flex: 0 0 auto;
+    min-width: auto;
+  }
+  
   /* Pomodoro FAB positioning */
-  .pomo-fab {
+  .pomo-fab,
+  #miniPomo {
     right: var(--space-xl);
     bottom: var(--space-xl);
   }
@@ -1191,6 +1338,7 @@ select.input {
   .header-actions,
   .btn,
   .pomo-fab,
+  #miniPomo,
   .modal {
     display: none !important;
   }
