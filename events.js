@@ -21,7 +21,7 @@ import {
   saveMediaList,
   loadMediaList,
   getTodayString
-} from './state.js';
+} from './state.js?v=9.0.1';
 
 import {
   renderTasks,
@@ -39,7 +39,7 @@ import {
   getEditFormData,
   showToast,
   getDOM
-} from './ui.js';
+} from './ui.js?v=9.0.1';
 
 import {
   startPomoTimer,
@@ -47,7 +47,7 @@ import {
   resetPomoTimer,
   setPomoTimes,
   setAutoStart
-} from './pomodoro.js';
+} from './pomodoro.js?v=9.0.1';
 
 let DOM = {};
 

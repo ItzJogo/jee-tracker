@@ -2,7 +2,7 @@
 // POMODORO.JS — Pomodoro Timer Logic with Draggable Widget
 // -------------------------------------------------------------
 
-import { updatePomodoroCount } from './state.js';
+import { updatePomodoroCount } from './state.js?v=9.0.1';
 
 // Pomodoro state
 let pomoState = {
