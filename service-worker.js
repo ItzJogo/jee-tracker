@@ -4,7 +4,7 @@
 // This service worker implements offline-first functionality
 // for the JEE Focus Tracker PWA
 
-const CACHE_NAME = 'jee-tracker-v9-offline';
+const CACHE_NAME = 'jee-tracker-v9.2.1-offline';
 
 // All critical assets that need to be cached for offline functionality
 const ASSETS_TO_CACHE = [
