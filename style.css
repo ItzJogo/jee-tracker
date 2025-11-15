@@ -1,0 +1,398 @@
+/* ------------------------------------------------------------
+   YASH v7.1 — GLASS + NEON + ACCESSIBILITY PRO
+------------------------------------------------------------- */
+
+:root{
+  --bg:#0a0f1d;
+  --card:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.12);
+  --muted:#94a3b8;
+  --text:#e2e8f0;
+
+  --accent:#38bdf8;
+  --accent-red:#f87171;
+  --accent-green:#34d399;
+
+  --blur:18px;
+  --radius:14px;
+  --pad:16px;
+
+  --glass:rgba(255,255,255,0.08);
+  --inner-shadow:inset 0 0 25px rgba(0,0,0,0.45);
+
+  --glow:0 0 12px rgba(56,189,248,0.45), 0 0 20px rgba(56,189,248,0.25);
+}
+
+/* smoothing */
+*{
+  box-sizing:border-box;
+  -webkit-font-smoothing:antialiased;
+}
+
+/* background */
+html,body{
+  height:100%; margin:0;
+  font-family:Inter,system-ui;
+  background:
+    linear-gradient(180deg,#050814,#0a0f1d 50%,#050814),
+    radial-gradient(circle at 20% 20%,rgba(56,189,248,0.15),transparent 50%);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* Glass Cards */
+.card{
+  background:var(--glass);
+  padding:var(--pad);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  backdrop-filter:blur(var(--blur));
+  box-shadow:var(--inner-shadow);
+  transition:0.25s ease;
+}
+
+.card:hover{
+  transform:translateY(-3px);
+  box-shadow:var(--glow);
+}
+
+/* Buttons */
+.btn{
+  padding:10px 16px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,0.03);
+  color:var(--text);
+  cursor:pointer;
+  font-weight:600;
+  transition:0.2s ease;
+}
+
+.btn:hover{
+  border-color:var(--accent);
+  box-shadow:var(--glow);
+}
+
+.btn.primary{
+  background:linear-gradient(90deg,rgba(56,189,248,0.35),rgba(52,211,153,0.25));
+  border-color:rgba(56,189,248,0.4);
+}
+
+.btn.danger{
+  background:rgba(248,113,113,0.2);
+  border-color:rgba(248,113,113,0.3);
+  color:var(--accent-red);
+}
+
+/* Input Fields */
+.input{
+  flex:1;
+  padding:12px;
+  border-radius:12px;
+  border:1px solid rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.02);
+  color:var(--text);
+  outline:none;
+  transition:0.2s;
+  /* --- FIXED: Added min-width for flex items on mobile --- */
+  min-width: 120px;
+}
+
+.input:focus{
+  border-color:var(--accent);
+  box-shadow:var(--glow);
+}
+
+/* Task Items */
+.task{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px;
+  margin-bottom:12px;
+  border-radius:12px;
+  background:rgba(255,255,255,0.04);
+  border-left:4px solid var(--accent);
+  transition:0.2s;
+  /* === YASH v7.1 FIX: Add position relative for checkmark === */
+  position: relative;
+  overflow: hidden;
+}
+
+.task:hover{
+  transform:scale(1.01);
+}
+
+/* Badges */
+.badge{
+  padding:4px 10px;
+  border-radius:999px;
+  font-size:0.8rem;
+  font-weight:700;
+}
+
+.badge.done{ background:rgba(52,211,153,0.2); color:var(--accent-green); }
+.badge.missed{ background:rgba(248,113,113,0.2); color:var(--accent-red); }
+.badge.open{ background:rgba(56,189,248,0.2); color:var(--accent); }
+
+/* Progress Bar */
+.progress-bar{
+  height:10px;
+  background:rgba(255,255,255,0.1);
+  border-radius:4px;
+}
+
+.progress-fill{
+  height:100%;
+  background:linear-gradient(90deg,var(--accent-green),var(--accent));
+  width:0%;
+  border-radius:4px;
+  transition:width .3s ease;
+}
+
+/* Modal */
+.modal{
+  display:none;
+  position:fixed;
+  z-index:2000;
+  left:0; top:0;
+  width:100%; height:100%;
+  background:rgba(0,0,0,0.85);
+  backdrop-filter:blur(8px);
+}
+
+.modal-content{
+  background:var(--glass);
+  margin:8% auto;
+  padding:24px;
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  width:90%; max-width:520px;
+  box-shadow:var(--inner-shadow);
+}
+
+.close{
+  float:right;
+  font-size:28px;
+  cursor:pointer;
+  color:var(--muted);
+}
+
+/* ARIA Live */
+[aria-live="polite"]{
+  position:absolute;
+  left:-9999px;
+}
+
+/* Calendar */
+.day{
+  padding:10px;
+  border-radius:10px;
+  background:rgba(255,255,255,0.05);
+  border:1px solid rgba(255,255,255,0.06);
+  text-align:center;
+}
+
+/* Pomodoro mini */
+.pomo-fixed{
+  position:fixed;
+  right:20px; bottom:20px;
+  padding:10px 14px;
+  border-radius:14px;
+  background:rgba(0,0,0,0.35);
+  backdrop-filter:blur(12px);
+  color:var(--accent);
+  font-weight:700;
+  z-index: 100; /* Added z-index */
+}
+
+
+/* ------------------------------------------------------------
+   YASH v7.0 — LAYOUT & HEADER (FIX)
+------------------------------------------------------------- */
+
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* For small screens */
+  gap: 16px;
+  padding: 20px 0;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 24px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, var(--accent), var(--accent-green));
+  color: #050814;
+  font-weight: 700;
+  font-size: 1.1rem;
+  display: grid;
+  place-items: center;
+  border: 2px solid rgba(255,255,255,0.2);
+}
+
+.title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.subtitle {
+  font-size: 0.85rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.main-grid {
+  display: grid;
+  grid-template-columns: 1fr; /* Mobile default */
+  gap: 16px;
+  padding-bottom: 60px; /* Space for pomo */
+}
+
+/* Desktop layout */
+@media (min-width: 900px) {
+  .main-grid {
+    grid-template-columns: 2fr 1fr; /* 2-column layout */
+  }
+  .topbar {
+    flex-wrap: nowrap; /* No wrap on desktop */
+  }
+}
+
+/* ------------------------------------------------------------
+   YASH v7.0 — COMPONENT-SPECIFIC STYLES (FIX)
+------------------------------------------------------------- */
+
+/* For grouped task list */
+.subject-group-header {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--accent);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+  margin-top: 24px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.subject-group-header .icon {
+  font-size: 0.9rem;
+  color: var(--muted);
+  font-weight: 400;
+}
+
+/* For media list */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 6px 0;
+  font-size: 0.95rem;
+}
+.list-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  opacity: 0.5;
+  transition: 0.2s;
+}
+.list-btn:hover {
+  opacity: 1;
+}
+
+/* For syllabus progress bars */
+.chapter-bar {
+  height: 8px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.chapter-fill {
+  height: 100%;
+  background: var(--accent-green);
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+/* For input rows */
+.row {
+  display: flex;
+  gap: 12px;
+  /* --- FIXED: Added flex-wrap to all .row elements --- */
+  flex-wrap: wrap;
+}
+
+/* Avatar pulse on voice */
+.pulse {
+  animation: pulse-anim 0.5s ease;
+}
+@keyframes pulse-anim {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56,189,248,0.5); }
+  50% { transform: scale(1.1); box-shadow: 0 0 0 10px rgba(56,189,248,0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(56,189,248,0); }
+}
+
+/* === FORM GRID LAYOUT FIX === */
+.form-inputs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 12px; /* Gap between items */
+}
+/* Override inline styles for width in grid */
+.form-inputs-grid .input {
+  width: 100%;
+  max-width: none !important; /* Force override inline style */
+}
+/* === END FORM GRID FIX === */
+
+/* === YASH v7.1 'DONE' STATE FIX === */
+.task.task-done {
+  opacity: 0.6;
+  border-left-color: var(--accent-green);
+  background: rgba(255,255,255,0.02); /* Thoda aur dull */
+}
+.task.task-done .title-small {
+  text-decoration: line-through;
+  color: var(--muted);
+}
+.task.task-missed {
+  opacity: 0.5;
+  border-left-color: var(--accent-red);
+  background: rgba(248,113,113,0.05);
+}
+.task.task-missed .title-small {
+  text-decoration: line-through;
+}
+.done-check {
+  position: absolute;
+  top: 0px;
+  right: 4px;
+  font-size: 28px;
+  color: var(--accent-green);
+  opacity: 0.3;
+  transform: rotate(15deg);
+  animation: pop-in 0.3s ease-out;
+}
+@keyframes pop-in {
+  0% { transform: scale(0.5) rotate(15deg); opacity: 0; }
+  100% { transform: scale(1) rotate(15deg); opacity: 0.3; }
+}
+/* === END v7.1 FIX === */
