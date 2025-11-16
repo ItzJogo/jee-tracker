@@ -49,6 +49,8 @@ import {
   setAutoStart
 } from './pomodoro.js?v=9.0.1';
 
+import { createDebouncedAutosave } from './mobile-utils.js?v=9.3.0';
+
 let DOM = {};
 
 // -------------------------------------------------------------
@@ -344,10 +346,28 @@ function handleClearReflection() {
   DOM.autoSaveStatus.innerText = "Last saved: —";
 }
 
-function handleAutoSaveReflection() {
+// Debounced autosave for reflection (1 second delay)
+const debouncedReflectionSave = createDebouncedAutosave(() => {
   const text = DOM.reflectionEl.value;
   saveReflection(text);
-  DOM.autoSaveStatus.innerText = 'Autosaved: ' + new Date().toLocaleTimeString();
+  const now = new Date();
+  const timeStr = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+  DOM.autoSaveStatus.innerText = `Last saved: ${timeStr}`;
+  DOM.autoSaveStatus.style.color = 'var(--color-success)';
+  
+  // Fade back to normal color after 2 seconds
+  setTimeout(() => {
+    DOM.autoSaveStatus.style.color = 'var(--color-text-muted)';
+  }, 2000);
+}, 1000);
+
+function handleAutoSaveReflection() {
+  // Show "saving..." immediately for feedback
+  DOM.autoSaveStatus.innerText = 'Saving...';
+  DOM.autoSaveStatus.style.color = 'var(--color-text-secondary)';
+  
+  // Debounced save
+  debouncedReflectionSave();
 }
 
 // -------------------------------------------------------------

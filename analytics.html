@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="theme-color" content="#0b0f14">
+<title>Analytics — JEE FOCUS TRACKER PRO</title>
+
+<!-- PWA Manifest -->
+<link rel="manifest" href="manifest.json?v=9.2.1">
+<link rel="apple-touch-icon" href="/icons/icon-192.png">
+
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<!-- Styles -->
+<link rel="stylesheet" href="styles.css?v=9.3.0">
+
+<style>
+  /* Additional styles for analytics page */
+  .nav-tabs {
+    display: flex;
+    gap: var(--space-md);
+    margin-bottom: var(--space-xl);
+    border-bottom: 2px solid var(--color-border);
+    padding-bottom: var(--space-sm);
+    flex-wrap: wrap;
+  }
+  
+  .nav-tab {
+    padding: var(--space-sm) var(--space-lg);
+    background: transparent;
+    border: none;
+    color: var(--color-text-secondary);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    border-bottom: 3px solid transparent;
+    margin-bottom: -2px;
+  }
+  
+  .nav-tab:hover {
+    color: var(--color-text-primary);
+  }
+  
+  .nav-tab.active {
+    color: var(--color-primary);
+    border-bottom-color: var(--color-primary);
+  }
+  
+  .tab-content {
+    display: none;
+  }
+  
+  .tab-content.active {
+    display: block;
+  }
+  
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    color: var(--color-primary);
+    text-decoration: none;
+    font-weight: 600;
+    margin-bottom: var(--space-lg);
+    transition: all var(--transition-fast);
+  }
+  
+  .back-link:hover {
+    gap: var(--space-sm);
+  }
+</style>
+</head>
+<body>
+
+<!-- Main App Container -->
+<div class="app">
+  
+  <!-- Header / Top Bar -->
+  <header class="header">
+    <div class="header-brand">
+      <a href="index.html" class="back-link">
+        <span>←</span> Back to Tasks
+      </a>
+    </div>
+    
+    <nav class="header-actions">
+      <button class="btn btn-icon" id="exportAnalytics" aria-label="Export analytics data" title="Export Analytics">
+        <span>📊</span>
+      </button>
+      <button class="btn btn-icon" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle Theme">
+        <span>☀️</span>
+      </button>
+    </nav>
+  </header>
+
+  <!-- Main Content Area -->
+  <main class="container">
+    
+    <section id="analytics-section" style="width: 100%;">
+      
+      <!-- Page Title -->
+      <article class="card">
+        <h1 style="margin: 0; font-size: 2rem; color: var(--color-text-primary);">
+          📊 Analytics & Insights
+        </h1>
+        <p style="margin: var(--space-sm) 0 0 0; color: var(--color-text-secondary);">
+          Track your study progress, analyze patterns, and optimize your learning
+        </p>
+      </article>
+      
+      <!-- Summary Stats -->
+      <article class="card">
+        <header class="card-header">
+          <h2 class="card-title">📈 7-Day Summary</h2>
+        </header>
+        <div id="summaryStats"></div>
+      </article>
+      
+      <!-- Navigation Tabs -->
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-tab="weekly">Weekly Overview</button>
+        <button class="nav-tab" data-tab="subjects">Subject Analysis</button>
+        <button class="nav-tab" data-tab="daily">Daily Breakdown</button>
+        <button class="nav-tab" data-tab="planner">Study Planner</button>
+      </div>
+      
+      <!-- Tab: Weekly Overview -->
+      <div class="tab-content active" id="weekly-tab">
+        <article class="card">
+          <header class="card-header">
+            <h2 class="card-title">📊 7-Day Activity</h2>
+          </header>
+          <div id="weeklyBarGraph"></div>
+        </article>
+        
+        <article class="card">
+          <header class="card-header">
+            <h2 class="card-title">🔥 Streak & Consistency</h2>
+          </header>
+          <div id="streakInfo" style="text-align: center; padding: var(--space-xl);">
+            <div style="font-size: 4rem; margin-bottom: var(--space-md);">🔥</div>
+            <div style="font-size: 3rem; font-weight: 800; color: var(--color-primary); margin-bottom: var(--space-sm);" id="longestStreakValue">
+              0 days
+            </div>
+            <div style="font-size: var(--font-lg); color: var(--color-text-secondary);">
+              Longest Streak
+            </div>
+          </div>
+        </article>
+      </div>
+      
+      <!-- Tab: Subject Analysis -->
+      <div class="tab-content" id="subjects-tab">
+        <article class="card">
+          <header class="card-header">
+            <h2 class="card-title">📚 Subject Distribution</h2>
+          </header>
+          <div id="subjectHeatmap"></div>
+        </article>
+        
+        <article class="card">
+          <header class="card-header">
+            <h2 class="card-title">🎯 Subject Performance</h2>
+          </header>
+          <div class="chart-container">
+            <canvas id="subjectPieChart"></canvas>
+          </div>
+        </article>
+      </div>
+      
+      <!-- Tab: Daily Breakdown -->
+      <div class="tab-content" id="daily-tab">
+        <article class="card">
+          <header class="card-header">
+            <h2 class="card-title">📅 Daily Progress Breakdown</h2>
+          </header>
+          <div id="dailyBreakdown"></div>
+        </article>
+      </div>
+      
+      <!-- Tab: Study Planner -->
+      <div class="tab-content" id="planner-tab">
+        <article class="card">
+          <header class="card-header">
+            <h2 class="card-title">📋 Study Plan Generator</h2>
+          </header>
+          
+          <form id="plannerForm">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="planSubject">Subject</label>
+                <select id="planSubject" class="input" required>
+                  <option value="Chemistry">⚗️ Chemistry</option>
+                  <option value="Physics">⚡ Physics</option>
+                  <option value="Math">∞ Math</option>
+                  <option value="Biology">🧬 Biology</option>
+                </select>
+              </div>
+              
+              <div class="form-group">
+                <label for="planDays">Available Days</label>
+                <input type="number" id="planDays" class="input" min="1" max="30" value="7" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="planHours">Hours/Day</label>
+                <input type="number" id="planHours" class="input" min="1" max="12" value="3" step="0.5" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="planDifficulty">Difficulty</label>
+                <select id="planDifficulty" class="input">
+                  <option value="easy">Easy</option>
+                  <option value="medium" selected>Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="form-group">
+              <label for="planChapters">Chapters (comma-separated)</label>
+              <textarea 
+                id="planChapters" 
+                class="input textarea" 
+                rows="3" 
+                placeholder="e.g., Kinematics, NLM, Friction"
+                required
+              ></textarea>
+            </div>
+            
+            <div class="btn-group">
+              <button type="submit" class="btn btn-primary">
+                <span>✨</span> Generate Plan
+              </button>
+              <button type="button" class="btn btn-secondary" id="clearPlan">
+                Clear
+              </button>
+            </div>
+          </form>
+        </article>
+        
+        <!-- Plan Preview -->
+        <div id="planPreviewContainer"></div>
+        
+        <!-- Import to Tasks -->
+        <article class="card" id="importPlanCard" style="display: none;">
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="importPlanBtn">
+              <span>📥</span> Import Plan to Tasks
+            </button>
+          </div>
+        </article>
+      </div>
+      
+    </section>
+    
+  </main>
+  
+</div>
+
+<!-- Modular JavaScript -->
+<script type="module">
+  // Import modules
+  import { initMobileOptimizations } from './mobile-utils.js';
+  import { 
+    getWeeklyAnalytics,
+    renderWeeklyBarGraph,
+    renderSubjectHeatmap,
+    renderDailyBreakdown,
+    renderSummaryStats,
+    calculateLongestStreak
+  } from './analytics.js';
+  import { 
+    generateStudyPlan,
+    renderPlanPreview,
+    importPlanToTasks,
+    PRESET_PLANS
+  } from './planner.js';
+  import { addTask } from './state.js';
+  import { getTheme, saveTheme } from './state.js';
+  
+  // Initialize mobile optimizations
+  initMobileOptimizations();
+  
+  // Load theme
+  const theme = getTheme();
+  if (theme === 'light') {
+    document.documentElement.classList.add('light');
+  }
+  
+  // Theme toggle
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const cls = document.documentElement.classList;
+    if (cls.contains('light')) {
+      cls.remove('light');
+      saveTheme('dark');
+    } else {
+      cls.add('light');
+      saveTheme('light');
+    }
+  });
+  
+  // Tab switching
+  document.querySelectorAll('.nav-tab').forEach(tab => {
+    tab.addEventListener('click', () => {
+      // Remove active from all tabs
+      document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      
+      // Add active to clicked tab
+      tab.classList.add('active');
+      const tabId = tab.dataset.tab;
+      document.getElementById(tabId + '-tab').classList.add('active');
+    });
+  });
+  
+  // Render analytics on load
+  function renderAnalytics() {
+    renderSummaryStats('summaryStats');
+    renderWeeklyBarGraph('weeklyBarGraph');
+    renderSubjectHeatmap('subjectHeatmap');
+    renderDailyBreakdown('dailyBreakdown');
+    
+    // Update streak
+    const streak = calculateLongestStreak();
+    document.getElementById('longestStreakValue').textContent = `${streak} days`;
+  }
+  
+  // Study planner
+  let currentPlan = null;
+  
+  document.getElementById('plannerForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    
+    const subject = document.getElementById('planSubject').value;
+    const days = parseInt(document.getElementById('planDays').value);
+    const hours = parseFloat(document.getElementById('planHours').value);
+    const difficulty = document.getElementById('planDifficulty').value;
+    const chaptersText = document.getElementById('planChapters').value;
+    const chapters = chaptersText.split(',').map(c => c.trim()).filter(c => c);
+    
+    if (chapters.length === 0) {
+      alert('Please enter at least one chapter');
+      return;
+    }
+    
+    currentPlan = generateStudyPlan({
+      subject,
+      chapters,
+      availableDays: days,
+      hoursPerDay: hours,
+      difficulty
+    });
+    
+    if (!currentPlan.feasible) {
+      alert(currentPlan.reason + '\n\n' + currentPlan.recommendation);
+      return;
+    }
+    
+    renderPlanPreview(currentPlan, 'planPreviewContainer');
+    document.getElementById('importPlanCard').style.display = 'block';
+  });
+  
+  document.getElementById('clearPlan').addEventListener('click', () => {
+    document.getElementById('plannerForm').reset();
+    document.getElementById('planPreviewContainer').innerHTML = '';
+    document.getElementById('importPlanCard').style.display = 'none';
+    currentPlan = null;
+  });
+  
+  document.getElementById('importPlanBtn').addEventListener('click', () => {
+    if (!currentPlan) return;
+    
+    const result = importPlanToTasks(currentPlan, addTask);
+    
+    if (result.success) {
+      alert(`✅ Success! ${result.tasksCreated} tasks imported to your task list.\n\nGo to the main page to see them.`);
+    } else {
+      alert(`❌ Failed: ${result.message}`);
+    }
+  });
+  
+  // Export analytics
+  document.getElementById('exportAnalytics').addEventListener('click', () => {
+    const analytics = getWeeklyAnalytics();
+    const blob = new Blob([JSON.stringify(analytics, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `analytics-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  });
+  
+  // Initialize
+  renderAnalytics();
+  
+  console.log('✅ Analytics page initialized');
+</script>
+
+<!-- Service Worker Registration -->
+<script>
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(reg => console.log('Service Worker registered.', reg))
+        .catch(err => console.error('Service Worker registration failed:', err));
+    });
+  }
+</script>
+
+</body>
+</html>
