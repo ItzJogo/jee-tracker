@@ -160,14 +160,13 @@
       </article>
       
       <!-- Task List Card -->
-      <article class="card">
+      <article class="card tasks-card">
         <header class="card-header">
-          <h2 class="card-title">Your Tasks</h2>
-          <div id="dateSmall" class="card-subtitle"></div>
+          <h3>Your Tasks <span id="current-tasks-date" class="date-pill"></span></h3>
         </header>
         
         <!-- Filters -->
-        <div class="filter-group">
+        <div class="filters">
           <select id="filterSubject" class="input input-small" aria-label="Filter by subject">
             <option value="">All Subjects</option>
           </select>
@@ -175,6 +174,15 @@
             <option value="">All Priorities</option>
           </select>
           <button type="button" class="btn btn-small" id="clearFiltersBtn">Clear</button>
+        </div>
+        
+        <!-- Task Grid Header -->
+        <div class="task-grid-header">
+          <span class="header-task">TASK</span>
+          <span class="header-priority">PRIORITY</span>
+          <span class="header-subject">SUBJECT</span>
+          <span class="header-status">STATUS</span>
+          <span class="header-actions">ACTIONS</span>
         </div>
         
         <!-- Task List Container -->

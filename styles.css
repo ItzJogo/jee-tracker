@@ -1347,3 +1347,137 @@ select.input,
     break-inside: avoid;
   }
 }
+
+/* ------------------------------------------------------------
+   NEW NOTION-STYLE GRID LAYOUT STYLES
+   ------------------------------------------------------------ */
+
+/* --- New Date Pill Style --- */
+.date-pill {
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 99px;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  font-weight: 600;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+/* --- New Task Grid Layout --- */
+.task-grid-header,
+.task-grid-row {
+  display: grid;
+  /* Define the 5 columns */
+  grid-template-columns: 3fr 1.2fr 1.2fr 1.2fr 1.5fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.task-grid-header {
+  font-size: 0.75rem;
+  color: var(--color-text-muted);
+  font-weight: 600;
+  text-transform: uppercase;
+  padding-top: 15px;
+}
+
+.task-grid-row {
+  background: var(--color-surface);
+  border-radius: 10px;
+  margin-top: 8px;
+  border-bottom: none; /* Override border */
+  transition: background 0.2s ease;
+}
+
+.task-grid-row:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.grid-cell {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* --- Cell Specific Styles --- */
+.cell-task .task-title-main {
+  font-weight: 600;
+  color: var(--color-text-primary);
+}
+.cell-task .task-meta-subtle {
+  font-size: 0.8rem;
+  color: var(--color-text-muted);
+  padding-top: 2px;
+}
+
+.cell-actions {
+  display: flex;
+  gap: 6px;
+  justify-content: flex-end;
+}
+.cell-actions .btn.small {
+  padding: 6px 8px; /* Make buttons smaller */
+  font-size: 0.9rem;
+  line-height: 1;
+}
+
+/* --- New Pill/Badge Styles (From Target) --- */
+.pill {
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: inline-block;
+  text-align: center;
+  white-space: nowrap;
+}
+
+/* Priority Pills */
+.pill-priority-high { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+.pill-priority-medium { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
+.pill-priority-low { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+
+/* Subject Pills */
+.pill-subject-chemistry { background: rgba(248, 113, 113, 0.2); color: #f87171; }
+.pill-subject-physics { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+.pill-subject-maths { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+.pill-subject-math { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+.pill-subject-biology { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
+
+/* Status Pills */
+.pill-status-open { background: rgba(251, 146, 60, 0.2); color: #fb923c; }
+.pill-status-done { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+.pill-status-missed { background: rgba(139, 92, 246, 0.2); color: #a78bfa; }
+
+/* --- Mobile Responsiveness (CRITICAL) --- */
+@media (max-width: 700px) {
+  /* Hide the grid header on mobile */
+  .task-grid-header {
+    display: none;
+  }
+
+  /* Stack the grid into a card on mobile */
+  .task-grid-row {
+    grid-template-columns: 1fr 1fr; /* 2 column layout for pills */
+    padding: 12px;
+    gap: 12px;
+  }
+
+  .cell-task {
+    grid-column: 1 / -1; /* Title spans full width */
+  }
+  .cell-priority { grid-column: 1 / 2; }
+  .cell-subject { grid-column: 2 / -1; }
+  .cell-status { grid-column: 1 / -1; } /* Status spans full width */
+  .cell-actions {
+    grid-column: 1 / -1; /* Actions span full width */
+    justify-content: space-around; /* Spread buttons out */
+  }
+
+  .pill {
+    width: 100%; /* Make pills full-width in their columns */
+  }
+}
