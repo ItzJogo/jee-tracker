@@ -113,8 +113,8 @@ export function initUI() {
   
   // Set today's date
   const today = getTodayString();
-  DOM.todayDate.innerText = today;
-  DOM.dateSmall.innerText = today;
+  if (DOM.todayDate) DOM.todayDate.innerText = today;
+  if (DOM.dateSmall) DOM.dateSmall.innerText = today;
   
   // Initialize filter dropdowns
   initFilterDropdowns();
@@ -163,6 +163,12 @@ if (typeof window !== 'undefined') {
 // -------------------------------------------------------------
 
 export function renderTasks() {
+  // Update the date pill at the beginning
+  const datePillEl = document.getElementById('current-tasks-date');
+  if (datePillEl) {
+    datePillEl.textContent = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+  
   let tasks = getTasks().slice();
   
   // Apply filters
@@ -176,33 +182,6 @@ export function renderTasks() {
   
   DOM.taskList.innerHTML = "";
   
-  // Group by subject
-  const grouped = tasks.reduce((acc, t) => {
-    acc[t.subject] = acc[t.subject] || [];
-    acc[t.subject].push(t);
-    return acc;
-  }, {});
-  
-  const order = ['Physics', 'Chemistry', 'Math', 'Biology'];
-  order.forEach(sub => {
-    const list = grouped[sub];
-    if (!list || list.length === 0) return;
-    
-    // Subject header
-    const hdr = document.createElement('div');
-    hdr.className = 'subject-group-header';
-    hdr.innerHTML = `<span>${sub}</span><span class="icon">Total: ${list.length}</span>`;
-    DOM.taskList.appendChild(hdr);
-    
-    // Sort by priority
-    list.sort((a, b) => {
-      const map = { High: 3, Medium: 2, Low: 1 };
-      return (map[b.priority] || 0) - (map[a.priority] || 0);
-    }).forEach(task => {
-      renderTaskItem(task);
-    });
-  });
-  
   // Empty state
   if (tasks.length === 0) {
     DOM.taskList.innerHTML = `
@@ -212,104 +191,73 @@ export function renderTasks() {
         <div class="empty-text">Add your first task to get started!</div>
       </div>
     `;
+    return;
   }
+  
+  // Sort by priority
+  tasks.sort((a, b) => {
+    const map = { High: 3, Medium: 2, Low: 1 };
+    return (map[b.priority] || 0) - (map[a.priority] || 0);
+  });
+  
+  // Render each task as a grid row
+  tasks.forEach(task => {
+    renderTaskItem(task);
+  });
 }
 
-function renderTaskItem(task) {
+function renderTaskItem(t) {
   const el = document.createElement('div');
-  el.className = 'task';
-  el.setAttribute('data-id', task.id);
-  el.setAttribute('role', 'listitem');
+  el.className = `task-grid-row status-${t.status || 'open'}`;
+  el.dataset.id = t.id;
   
-  // Apply status styling
-  if (task.status === 'Done') {
-    el.classList.add('task-done');
-    const check = document.createElement('div');
-    check.className = 'done-check';
-    check.textContent = '✔';
-    el.appendChild(check);
-  } else if (task.status === 'Missed') {
-    el.classList.add('task-missed');
-  }
-  
-  const left = document.createElement('div');
-  left.style.flex = '1';
-  
-  const title = document.createElement('div');
-  title.className = 'title-small';
-  title.textContent = task.title;
-  left.appendChild(title);
-  
-  const meta = document.createElement('div');
-  meta.className = 'meta';
-  const chapterText = task.chapter ? ` • ${escapeHtml(task.chapter)}` : '';
-  meta.innerHTML = `${escapeHtml(task.subject)}${chapterText} • ${escapeHtml(task.priority)} • ${escapeHtml(task.expectedMinutes || 0)} min ${task.backlog ? `• ${escapeHtml(task.backlog)}` : ''}`;
-  left.appendChild(meta);
-  
-  const meta2 = document.createElement('div');
-  meta2.className = 'meta';
-  meta2.style.marginTop = '6px';
-  meta2.textContent = `Block: ${task.block || 'N/A'}`;
-  left.appendChild(meta2);
-  
-  const right = document.createElement('div');
-  right.style.display = 'flex';
-  right.style.flexDirection = 'column';
-  right.style.alignItems = 'flex-end';
-  right.style.gap = '8px';
-  
-  const badge = document.createElement('div');
-  const statusClass = (task.status || 'Open').toLowerCase();
-  badge.className = `badge ${statusClass}`;
-  badge.textContent = task.status;
-  right.appendChild(badge);
-  
-  const btnRow = document.createElement('div');
-  btnRow.style.display = 'flex';
-  btnRow.style.gap = '6px';
-  btnRow.style.flexWrap = 'wrap';
-  
-  const doneBtn = document.createElement('button');
-  doneBtn.className = 'btn';
-  doneBtn.textContent = 'Done';
-  doneBtn.setAttribute('aria-label', 'Mark task as done');
-  doneBtn.onclick = () => {
-    // Event will be handled by events.js
-    window.handleTaskDone && window.handleTaskDone(task.id);
+  // Helper function for escaping HTML (using the existing escapeHtml function below)
+  const escapeHTML = (str) => {
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
   };
   
-  const missBtn = document.createElement('button');
-  missBtn.className = 'btn';
-  missBtn.textContent = 'Miss';
-  missBtn.setAttribute('aria-label', 'Mark task as missed');
-  missBtn.onclick = () => {
-    window.handleTaskMissed && window.handleTaskMissed(task.id);
+  el.innerHTML = `
+    <div class="grid-cell cell-task">
+      <div class="task-title-main">${escapeHTML(t.title)}</div>
+      <div class="task-meta-subtle">${t.chapter ? `${escapeHTML(t.chapter)} •` : ''} ${t.expectedMinutes || 0} min • ${t.block}</div>
+    </div>
+  
+    <div class="grid-cell cell-priority">
+      <span class="pill pill-priority-${t.priority.toLowerCase()}">${escapeHTML(t.priority)}</span>
+    </div>
+  
+    <div class="grid-cell cell-subject">
+      <span class="pill pill-subject-${t.subject.toLowerCase()}">${escapeHTML(t.subject)}</span>
+    </div>
+  
+    <div class="grid-cell cell-status">
+      <span class="pill pill-status-${(t.status || 'open').toLowerCase()}">${(t.status || 'open').toUpperCase()}</span>
+    </div>
+  
+    <div class="grid-cell cell-actions">
+      <button class="btn small done" data-action="done" title="Done">✔</button>
+      <button class="btn small missed" data-action="missed" title="Missed">✖</button>
+      <button class="btn small edit" data-action="edit" title="Edit">✏️</button>
+      <button class="btn small danger" data-action="delete" title="Delete">🗑️</button>
+    </div>
+  `;
+  
+  // Add event handlers for buttons
+  el.querySelector('[data-action="done"]').onclick = () => {
+    window.handleTaskDone && window.handleTaskDone(t.id);
+  };
+  el.querySelector('[data-action="missed"]').onclick = () => {
+    window.handleTaskMissed && window.handleTaskMissed(t.id);
+  };
+  el.querySelector('[data-action="edit"]').onclick = () => {
+    window.handleTaskEdit && window.handleTaskEdit(t.id);
+  };
+  el.querySelector('[data-action="delete"]').onclick = () => {
+    window.handleTaskDelete && window.handleTaskDelete(t.id);
   };
   
-  const editBtn = document.createElement('button');
-  editBtn.className = 'btn edit';
-  editBtn.textContent = 'Edit';
-  editBtn.setAttribute('aria-label', 'Edit task');
-  editBtn.onclick = () => {
-    window.handleTaskEdit && window.handleTaskEdit(task.id);
-  };
-  
-  btnRow.appendChild(doneBtn);
-  btnRow.appendChild(missBtn);
-  btnRow.appendChild(editBtn);
-  right.appendChild(btnRow);
-  
-  const delBtn = document.createElement('button');
-  delBtn.className = 'btn danger';
-  delBtn.textContent = '🗑️ Delete';
-  delBtn.setAttribute('aria-label', 'Delete task');
-  delBtn.onclick = () => {
-    window.handleTaskDelete && window.handleTaskDelete(task.id);
-  };
-  right.appendChild(delBtn);
-  
-  el.appendChild(left);
-  el.appendChild(right);
   DOM.taskList.appendChild(el);
 }
 
