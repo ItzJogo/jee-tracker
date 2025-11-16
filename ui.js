@@ -113,8 +113,8 @@ export function initUI() {
   
   // Set today's date
   const today = getTodayString();
-  DOM.todayDate.innerText = today;
-  DOM.dateSmall.innerText = today;
+  if (DOM.todayDate) DOM.todayDate.innerText = today;
+  if (DOM.dateSmall) DOM.dateSmall.innerText = today;
   
   // Initialize filter dropdowns
   initFilterDropdowns();
