@@ -27,6 +27,8 @@ import {
   makeDraggable
 } from './pomodoro.js?v=9.0.1';
 
+import { initMobileOptimizations } from './mobile-utils.js?v=9.3.0';
+
 import { 
   initEvents 
 } from './events.js?v=9.0.1';
@@ -36,34 +38,37 @@ import {
 // -------------------------------------------------------------
 
 function bootstrap() {
-  // 1. Initialize UI and get DOM references
+  // 1. Initialize mobile optimizations FIRST (critical for mobile UX)
+  initMobileOptimizations();
+  
+  // 2. Initialize UI and get DOM references
   const DOM = initUI();
   
-  // 2. Load all data from localStorage
+  // 3. Load all data from localStorage
   loadTasks();
   loadSyllabusProgress();
   
-  // 3. Load reflection for today
+  // 4. Load reflection for today
   const reflection = getReflection();
   if (reflection) {
     DOM.reflectionEl.value = reflection.text || '';
     DOM.autoSaveStatus.innerText = 'Last saved: ' + new Date(reflection.ts).toLocaleTimeString();
   }
   
-  // 4. Load daily goal
+  // 5. Load daily goal
   const dailyGoal = getDailyGoal();
   DOM.dailyGoalInput.value = dailyGoal;
   
-  // 5. Initialize Pomodoro
+  // 6. Initialize Pomodoro
   initPomodoro(DOM.pomoTimer, DOM.miniTimer, DOM.pomoWorkInput, DOM.pomoBreakInput);
   
-  // 6. Make Pomodoro widget draggable (FIXED: fully implemented)
+  // 7. Make Pomodoro widget draggable (FIXED: fully implemented)
   makeDraggable(DOM.miniPomo);
   
-  // 7. Initialize all event listeners
+  // 8. Initialize all event listeners
   initEvents();
   
-  // 8. Render all UI components
+  // 9. Render all UI components
   renderTasks();
   renderDashboard();
   renderSyllabusProgress();
@@ -71,19 +76,21 @@ function bootstrap() {
   renderCalendar();
   renderMediaLists();
   
-  // 9. Load theme preference
+  // 10. Load theme preference
   const theme = getTheme();
   if (theme === 'light') {
     document.documentElement.classList.add('light');
   }
   
-  // 10. Auto-save on page unload
+  // 11. Auto-save on page unload
   window.addEventListener('beforeunload', () => {
     // State management automatically saves, but this is a safety net
     console.log('Application closing...');
   });
   
-  console.log('✅ JEE Focus Tracker v9.0 initialized successfully');
+  console.log('✅ JEE Focus Tracker v9.3 initialized successfully');
+  console.log('📱 Mobile optimizations: Active');
+  console.log('📊 Analytics: Available at analytics.html');
 }
 
 // Wait for DOM to be ready
