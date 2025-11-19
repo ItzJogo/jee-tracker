@@ -9,7 +9,7 @@ router.use('/auth', authRouter);
 router.use('/tracker', trackerRouter);
 
 // Health check endpoint
-router.get('/health', (req, res) => {
+router.get('/health', (_req, res) => {
   res.status(200).json({
     success: true,
     data: {

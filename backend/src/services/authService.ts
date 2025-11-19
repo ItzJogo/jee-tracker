@@ -1,5 +1,5 @@
 import bcrypt from 'bcrypt';
-import { User, IUser } from '../models/User';
+import { User } from '../models/User';
 import { signToken, JWTPayload } from '../utils/jwt';
 
 const SALT_ROUNDS = 10;

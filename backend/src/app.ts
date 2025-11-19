@@ -22,7 +22,7 @@ export const createApp = (): Application => {
   app.use(express.urlencoded({ extended: true }));
 
   // Request logging middleware (simple)
-  app.use((req: Request, res: Response, next: NextFunction) => {
+  app.use((req: Request, _res: Response, next: NextFunction) => {
     console.log(`${req.method} ${req.path}`);
     next();
   });
@@ -31,7 +31,7 @@ export const createApp = (): Application => {
   app.use('/api', apiRouter);
 
   // Root endpoint
-  app.get('/', (req: Request, res: Response) => {
+  app.get('/', (_req: Request, res: Response) => {
     res.json({
       success: true,
       data: {
@@ -47,7 +47,7 @@ export const createApp = (): Application => {
   });
 
   // 404 handler
-  app.use((req: Request, res: Response) => {
+  app.use((_req: Request, res: Response) => {
     res.status(404).json({
       success: false,
       error: 'Route not found',
@@ -55,7 +55,7 @@ export const createApp = (): Application => {
   });
 
   // Global error handler
-  app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  app.use((err: Error, _req: Request, res: Response, _next: NextFunction) => {
     console.error('Error:', err);
     res.status(500).json({
       success: false,

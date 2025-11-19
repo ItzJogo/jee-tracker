@@ -12,7 +12,7 @@ import {
  * GET /api/tracker/topics
  * Protected route
  */
-export const getTopics = async (req: AuthRequest, res: Response): Promise<void> => {
+export const getTopics = async (_req: AuthRequest, res: Response): Promise<void> => {
   try {
     const topics = await getAllTopics();
 

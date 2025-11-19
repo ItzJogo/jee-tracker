@@ -1,4 +1,3 @@
-import mongoose from 'mongoose';
 import { Topic, ITopic } from '../models/Topic';
 import { Progress, IProgress } from '../models/Progress';
 

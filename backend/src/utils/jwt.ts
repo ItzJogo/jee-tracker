@@ -21,9 +21,9 @@ export interface AuthRequest extends Request {
 export const signToken = (
   payload: JWTPayload,
   secret: string,
-  expiresIn: string = '7d'
+  expiresIn: string | number = '7d'
 ): string => {
-  return jwt.sign(payload, secret, { expiresIn });
+  return jwt.sign(payload, secret, { expiresIn } as jwt.SignOptions);
 };
 
 /**
