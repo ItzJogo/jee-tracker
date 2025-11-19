@@ -21,6 +21,9 @@ describe('Authentication API', () => {
   let authToken: string;
 
   beforeAll(async () => {
+    // Set JWT secret for tests
+    process.env.JWT_SECRET = 'test-jwt-secret-for-testing-only';
+    
     // Connect to test database
     const mongoUri = process.env.MONGO_URI || 'mongodb://localhost:27017/jee-tracker-test';
     await connectDB(mongoUri);
