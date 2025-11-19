@@ -479,6 +479,33 @@ Tests automatically:
 
 5. **Token Expiration**: JWT tokens expire in 7 days (configurable in `src/utils/jwt.ts`)
 
+6. **⚠️ Rate Limiting**: For production deployment, implement rate limiting using `express-rate-limit`:
+   ```bash
+   npm install express-rate-limit
+   ```
+   Example configuration in `src/app.ts`:
+   ```typescript
+   import rateLimit from 'express-rate-limit';
+   
+   const limiter = rateLimit({
+     windowMs: 15 * 60 * 1000, // 15 minutes
+     max: 100, // Limit each IP to 100 requests per windowMs
+     message: 'Too many requests from this IP, please try again later.'
+   });
+   
+   // Apply to all routes
+   app.use('/api/', limiter);
+   
+   // Stricter limit for auth routes
+   const authLimiter = rateLimit({
+     windowMs: 15 * 60 * 1000,
+     max: 5, // 5 requests per 15 minutes
+   });
+   
+   app.use('/api/auth/login', authLimiter);
+   app.use('/api/auth/register', authLimiter);
+   ```
+
 ## 🐛 Troubleshooting
 
 ### Cannot connect to MongoDB
