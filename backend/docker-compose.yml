@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: jee-tracker-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: jee-tracker
+    networks:
+      - jee-tracker-network
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: jee-tracker-backend
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    environment:
+      - PORT=5000
+      - MONGO_URI=mongodb://mongo:27017/jee-tracker
+      - JWT_SECRET=${JWT_SECRET:-changeme_use_a_strong_secret}
+      - FRONTEND_URL=${FRONTEND_URL:-http://localhost:3000}
+    networks:
+      - jee-tracker-network
+    restart: unless-stopped
+
+volumes:
+  mongo-data:
+
+networks:
+  jee-tracker-network:
+    driver: bridge
