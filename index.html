@@ -47,6 +47,9 @@
       <button class="btn btn-icon" id="importBtn" aria-label="Import data from file" title="Import Data">
         <span>📥</span>
       </button>
+      <button class="btn btn-icon" id="sync-cloud-btn" aria-label="Sync with Cloud" title="Sync with Cloud">
+        <span>☁️</span>
+      </button>
       <button class="btn btn-icon" id="themeToggle" aria-label="Toggle light/dark theme" title="Toggle Theme">
         <span>☀️</span>
       </button>
@@ -533,6 +536,70 @@
 
 <!-- Modular JavaScript -->
 <script type="module" src="main.js?v=9.1.0"></script>
+
+<!-- Cloud Sync Integration -->
+<script type="module">
+  import { initAuth, openAuthModal, isLoggedIn, getToken } from './src/auth.js';
+  import { syncLocalToServer, formatSyncResults } from './src/tracker-sync.js';
+  
+  // Initialize auth module on page load
+  initAuth();
+  
+  // Setup cloud sync button handler
+  document.getElementById('sync-cloud-btn').addEventListener('click', async () => {
+    // Check if user is logged in
+    if (!isLoggedIn()) {
+      console.log('[CloudSync] Not logged in, opening auth modal');
+      openAuthModal();
+      
+      // Wait for login success
+      const handleAuthSuccess = async () => {
+        window.removeEventListener('cloudAuthSuccess', handleAuthSuccess);
+        // Small delay to let modal close
+        setTimeout(() => performSync(), 500);
+      };
+      window.addEventListener('cloudAuthSuccess', handleAuthSuccess);
+      return;
+    }
+    
+    // User is logged in, perform sync
+    await performSync();
+  });
+  
+  // Perform the actual sync
+  async function performSync() {
+    // Show loading toast if available
+    if (window.showToast) {
+      window.showToast('☁️ Syncing with cloud...', 'info');
+    }
+    
+    try {
+      const results = await syncLocalToServer();
+      const message = formatSyncResults(results);
+      
+      console.log('[CloudSync] Sync results:', results);
+      
+      if (window.showToast) {
+        if (results.failedCount > 0) {
+          window.showToast(message, 'error');
+        } else {
+          window.showToast(message, 'success');
+        }
+      } else {
+        alert(message);
+      }
+    } catch (error) {
+      console.error('[CloudSync] Sync failed:', error);
+      const errorMsg = '❌ Sync failed: ' + error.message;
+      
+      if (window.showToast) {
+        window.showToast(errorMsg, 'error');
+      } else {
+        alert(errorMsg);
+      }
+    }
+  }
+</script>
 
 <!-- Service Worker Registration -->
 <script>
