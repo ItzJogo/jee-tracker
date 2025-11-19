@@ -100,6 +100,31 @@ jee-tracker/
 
 No build process required - it's pure ES6 modules.
 
+### ☁️ Cloud Sync (Optional)
+
+The app now supports optional cloud synchronization to backup your progress to a remote server.
+
+**Setup:**
+1. The app defaults to `http://localhost:5000/api` for the backend API
+2. To use a different API endpoint, set `window.API_BASE_URL` before loading the app:
+   ```html
+   <script>
+     window.API_BASE_URL = 'https://your-api.example.com/api';
+   </script>
+   ```
+3. For deployment with environment variable injection (e.g., Netlify), configure your build to inject:
+   ```javascript
+   window.API_BASE_URL = '{{ API_BASE_URL }}';
+   ```
+
+**Usage:**
+1. Click the ☁️ (Cloud) button in the header
+2. Register or login with your account
+3. Your local syllabus progress will be synced to the cloud
+4. Data remains in localStorage - cloud sync is additive only
+
+**Note:** Cloud sync only uploads syllabus progress data. Local tasks and reflections remain local-only.
+
 ### 📱 Installing as a PWA (Progressive Web App)
 
 This app can be installed on your phone or desktop for a native app experience!
@@ -141,7 +166,9 @@ If your installed PWA still shows the browser URL bar instead of full-screen mod
 
 ## 🔐 Privacy
 
-All data is stored locally in your browser using localStorage. No data is sent to any server.
+All data is stored locally in your browser using localStorage. By default, no data is sent to any server.
+
+If you enable cloud sync (optional), only your syllabus progress data will be sent to the configured backend API. Tasks, reflections, and other personal data remain local-only.
 
 ## 📝 License
 
